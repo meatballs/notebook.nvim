@@ -6,6 +6,7 @@
 
 local json = require("json")
 local M = {}
+local PLUGIN_NAMESPACE = "ipynb"
 local VIRTUAL_TEXT_NAMESPACE = "ipynb_virtual_text"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true}
 
@@ -56,7 +57,7 @@ end
 
 M.load_notebook = function(autocmd)
     local buffer = autocmd["buf"]
-	local namespace = vim.api.nvim_create_namespace("ipynb")
+	local namespace = vim.api.nvim_create_namespace(PLUGIN_NAMESPACE)
     local content = parse_ipynb_buffer(buffer)
 
     vim.api.nvim_buf_set_var(buffer, "notebook", content)
