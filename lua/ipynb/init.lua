@@ -24,6 +24,8 @@ local function render_virtual_text(buffer, line, idx, cell, language, namespace)
 		virt_lines = { { { "" } }, { { virt_text, namespace } } },
 		virt_lines_above = true,
 	}
+	vim.api.nvim_set_hl(namespace, PLUGIN_NAMESPACE, VIRTUAL_TEXT_STYLE)
+	vim.api.nvim_set_hl_ns(namespace)
 	vim.api.nvim_buf_set_extmark(buffer, namespace, line, 0, virt_opts)
 end
 
@@ -44,6 +46,7 @@ M.render_notebook = function(buffer, namespace)
     local notebook = vim.api.nvim_buf_get_var(buffer, "notebook")
     local language = notebook["metadata"]["language_info"]["name"]
 
+	vim.api.nvim_buf_clear_namespace(buffer, namespace, 0, -1)
 	vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
 
 	local line = 0
@@ -60,12 +63,7 @@ M.load_notebook = function(autocmd)
     local content = parse_ipynb_buffer(buffer)
 
     vim.api.nvim_buf_set_var(buffer, "notebook", content)
-	vim.api.nvim_set_hl(namespace, PLUGIN_NAMESPACE, VIRTUAL_TEXT_STYLE)
-	vim.api.nvim_set_hl_ns(namespace)
-	vim.api.nvim_buf_clear_namespace(buffer, namespace, 0, -1)
-
     M.render_notebook(buffer, namespace)
-
 end
 
 vim.api.nvim_create_autocmd({ "BufRead" }, {
