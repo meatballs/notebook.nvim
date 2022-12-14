@@ -1,3 +1,9 @@
+-- SPDX-License-Identifier: MIT
+--
+-- Copyright (c) 2022 Owen Campbell
+--
+-- This software is published at https://github.com/meatballs/ipynb.nvim
+
 local json = require("json")
 local M = {}
 
