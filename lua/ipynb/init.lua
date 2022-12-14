@@ -7,7 +7,6 @@
 local json = require("json")
 local M = {}
 local PLUGIN_NAMESPACE = "ipynb"
-local VIRTUAL_TEXT_NAMESPACE = "ipynb_virtual_text"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true}
 
 local function parse_ipynb_buffer(buffer)
@@ -22,7 +21,7 @@ local function render_virtual_text(buffer, line, idx, cell, language, namespace)
 	if cell_type == "code" then cell_type = language end
     local virt_text = "[#" .. idx .. "] " .. cell_type
 	local virt_opts = {
-		virt_lines = { { { "" } }, { { virt_text, VIRTUAL_TEXT_NAMESPACE } } },
+		virt_lines = { { { "" } }, { { virt_text, namespace } } },
 		virt_lines_above = true,
 	}
 	vim.api.nvim_buf_set_extmark(buffer, namespace, line, 0, virt_opts)
@@ -61,7 +60,7 @@ M.load_notebook = function(autocmd)
     local content = parse_ipynb_buffer(buffer)
 
     vim.api.nvim_buf_set_var(buffer, "notebook", content)
-	vim.api.nvim_set_hl(namespace, VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_STYLE)
+	vim.api.nvim_set_hl(namespace, PLUGIN_NAMESPACE, VIRTUAL_TEXT_STYLE)
 	vim.api.nvim_set_hl_ns(namespace)
 	vim.api.nvim_buf_clear_namespace(buffer, namespace, 0, -1)
 
