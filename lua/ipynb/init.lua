@@ -6,7 +6,7 @@
 
 local json = require("json")
 local M = {}
-local VIRTUAL_TEXT_NAMESPACE = "ipynb_virt"
+local VIRTUAL_TEXT_NAMESPACE = "ipynb_virtual_text"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true}
 
 local function parse_ipynb_buffer(buffer)
