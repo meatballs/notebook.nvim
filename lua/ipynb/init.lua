@@ -4,7 +4,6 @@
 --
 -- This software is published at https://github.com/meatballs/ipynb.nvim
 
-local json = require("json")
 local M = {}
 local PLUGIN_NAMESPACE = "ipynb"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true}
@@ -13,7 +12,7 @@ local function parse_ipynb_buffer(buffer)
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
     local content = table.concat(lines, "")
 	content = content:gsub("\n", "")
-	return json.decode(content)
+	return pcall(vim.json.decode, content)
 end
 
 local function render_virtual_text(buffer, line, idx, cell, language, namespace)
@@ -60,7 +59,10 @@ end
 M.load_notebook = function(autocmd)
     local buffer = autocmd["buf"]
 	local namespace = vim.api.nvim_create_namespace(PLUGIN_NAMESPACE)
-    local content = parse_ipynb_buffer(buffer)
+	local ok, content = parse_ipynb_buffer(buffer)
+	if not ok then
+		return
+	end
 
     vim.api.nvim_buf_set_var(buffer, "notebook", content)
     M.render_notebook(buffer, namespace)
