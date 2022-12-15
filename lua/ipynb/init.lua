@@ -68,9 +68,4 @@ M.load_notebook = function(autocmd)
     M.render_notebook(buffer, namespace)
 end
 
-vim.api.nvim_create_autocmd({ "BufRead" }, {
-	pattern = { "*.ipynb" },
-	callback = M.load_notebook,
-})
-
 return M
