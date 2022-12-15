@@ -9,8 +9,8 @@ local PLUGIN_NAMESPACE = "ipynb"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true}
 
 local function parse_ipynb_buffer(buffer)
-    local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
-    local content = table.concat(lines, "")
+	local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
+	local content = table.concat(lines, "")
 	content = content:gsub("\n", "")
 	return pcall(vim.json.decode, content)
 end
@@ -18,7 +18,7 @@ end
 local function render_virtual_text(buffer, line, idx, cell, language, namespace)
 	local cell_type = cell["cell_type"]
 	if cell_type == "code" then cell_type = language end
-    local virt_text = "[#" .. idx .. "] " .. cell_type
+	local virt_text = "[#" .. idx .. "] " .. cell_type
 	local virt_opts = {
 		virt_lines = { { { "" } }, { { virt_text, namespace } } },
 		virt_lines_above = true,
@@ -36,14 +36,14 @@ M.render_cell = function(buffer, line, idx, cell, language, namespace)
 	local end_line = line + #source
 
 	vim.api.nvim_buf_set_lines(buffer, line, end_line, false, source)
-    render_virtual_text(buffer, line, idx, cell, language, namespace)
+	render_virtual_text(buffer, line, idx, cell, language, namespace)
 
-    return end_line
+	return end_line
 end
 
 M.render_notebook = function(buffer, namespace)
-    local notebook = vim.api.nvim_buf_get_var(buffer, "notebook")
-    local language = notebook["metadata"]["language_info"]["name"]
+	local notebook = vim.api.nvim_buf_get_var(buffer, "notebook")
+	local language = notebook["metadata"]["language_info"]["name"]
 
 	vim.api.nvim_buf_clear_namespace(buffer, namespace, 0, -1)
 	vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
@@ -57,15 +57,15 @@ M.render_notebook = function(buffer, namespace)
 end
 
 M.load_notebook = function(autocmd)
-    local buffer = autocmd["buf"]
+	local buffer = autocmd["buf"]
 	local namespace = vim.api.nvim_create_namespace(PLUGIN_NAMESPACE)
 	local ok, content = parse_ipynb_buffer(buffer)
 	if not ok then
 		return
 	end
 
-    vim.api.nvim_buf_set_var(buffer, "notebook", content)
-    M.render_notebook(buffer, namespace)
+	vim.api.nvim_buf_set_var(buffer, "notebook", content)
+	M.render_notebook(buffer, namespace)
 end
 
 return M
