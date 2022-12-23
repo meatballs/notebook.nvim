@@ -6,8 +6,8 @@
 
 local json = require("json")
 local M = {}
-local PLUGIN_NAMESPACE = "ipynb"
-local VIRTUAL_TEXT_NAMESPACE = "ipynb_virtual_text"
+local PLUGIN_NAMESPACE = vim.api.nvim_create_namespace("ipynb")
+local VIRTUAL_TEXT_HL_GROUP = "ipynb_virtual_text"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true}
 
 local function parse_ipynb_buffer(buffer)
@@ -17,18 +17,19 @@ local function parse_ipynb_buffer(buffer)
 	return json.decode(content)
 end
 
-local function render_virtual_text(buffer, line, idx, cell, language, namespace)
+local function set_cell_extmark(buffer, line, end_line, idx, cell, language)
 	local cell_type = cell["cell_type"]
 	if cell_type == "code" then cell_type = language end
     local virt_text = "[#" .. idx .. "] " .. cell_type
 	local virt_opts = {
-		virt_lines = { { { "" } }, { { virt_text, VIRTUAL_TEXT_NAMESPACE } } },
+        end_row = end_line,
+		virt_lines = { { { "" } }, { { virt_text, VIRTUAL_TEXT_HL_GROUP } } },
 		virt_lines_above = true,
 	}
-	vim.api.nvim_buf_set_extmark(buffer, namespace, line, 0, virt_opts)
+	return vim.api.nvim_buf_set_extmark(buffer, PLUGIN_NAMESPACE, line, 0, virt_opts)
 end
 
-M.render_cell = function(buffer, line, idx, cell, language, namespace)
+M.render_cell = function(buffer, line, idx, cell, language)
 	local source = {}
 	for k, v in ipairs(cell["source"]) do
 		source[k] = v:gsub("\n", "")
@@ -36,20 +37,24 @@ M.render_cell = function(buffer, line, idx, cell, language, namespace)
 	local end_line = line + #source
 
 	vim.api.nvim_buf_set_lines(buffer, line, end_line, false, source)
-    render_virtual_text(buffer, line, idx, cell, language, namespace)
+    local extmark_id = set_cell_extmark(buffer, line, end_line, idx, cell, language)
+    local mapping = vim.api.nvim_buf_get_var(buffer, "cell_2_extmark")
+    mapping[cell["id"]] = extmark_id
+    vim.api.nvim_buf_set_var(buffer, "cell_2_extmark", mapping)
 
     return end_line
 end
 
-M.render_notebook = function(buffer, namespace)
+M.render_notebook = function(buffer)
     local notebook = vim.api.nvim_buf_get_var(buffer, "notebook")
     local language = notebook["metadata"]["language_info"]["name"]
 
 	vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
+    vim.api.nvim_buf_set_var(buffer, "cell_2_extmark", {})
 
 	local line = 0
 	for idx, cell in ipairs(notebook["cells"]) do
-		line = M.render_cell(buffer, line, idx, cell, language, namespace)
+		line = M.render_cell(buffer, line, idx, cell, language)
 	end
 
 	vim.api.nvim_buf_set_option(0, "filetype", "notebook")
@@ -57,15 +62,14 @@ end
 
 M.load_notebook = function(autocmd)
     local buffer = autocmd["buf"]
-	local namespace = vim.api.nvim_create_namespace(PLUGIN_NAMESPACE)
     local content = parse_ipynb_buffer(buffer)
 
     vim.api.nvim_buf_set_var(buffer, "notebook", content)
-	vim.api.nvim_set_hl(namespace, VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_STYLE)
-	vim.api.nvim_set_hl_ns(namespace)
-	vim.api.nvim_buf_clear_namespace(buffer, namespace, 0, -1)
+	vim.api.nvim_set_hl(PLUGIN_NAMESPACE, VIRTUAL_TEXT_HL_GROUP, VIRTUAL_TEXT_STYLE)
+	vim.api.nvim_set_hl_ns(PLUGIN_NAMESPACE)
+	vim.api.nvim_buf_clear_namespace(buffer, PLUGIN_NAMESPACE, 0, -1)
 
-    M.render_notebook(buffer, namespace)
+    M.render_notebook(buffer)
 
 end
 
