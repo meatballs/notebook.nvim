@@ -35,9 +35,8 @@ M.load_notebook = function(autocmd)
         virt_hl_group = VIRTUAL_TEXT_HL_GROUP
     }
     vim.api.nvim_buf_create_user_command(buffer, "NPAddCell", commands.add_cell, {})
-    vim.api.nvim_buf_create_user_command(buffer, "NPInsertCellAbove", commands.insert_cell_above, {})
-    vim.api.nvim_buf_create_user_command(buffer, "NPInsertCellBelow", commands.insert_cell_below, {})
-    vim.api.nvim_buf_create_user_command(buffer, "NPDeleteCell", commands.delete_cell, {})
+    vim.api.nvim_buf_create_user_command(buffer, "NPInsertCell", commands.insert_cell, {nargs="?"})
+    vim.api.nvim_buf_create_user_command(buffer, "NPDeleteCell", commands.delete_cell, {nargs="?"})
     render.notebook(buffer, settings)
 
 end

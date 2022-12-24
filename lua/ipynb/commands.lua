@@ -1,27 +1,25 @@
 local M = {}
 local render = require("ipynb.render")
 
-local function add_cell(line)
-    local cell = {cell_type="code", source={""}}
-    render.cell(0, line, 22, cell)
+local function add_cell(line, cell_type)
+    local cell = {cell_type=cell_type, source={""}}
+    local idx = 22
+    render.cell(0, line, idx, cell)
+    vim.api.nvim_win_set_cursor(0, {line + 1, 0})
 end
 
 
 M.add_cell = function()
     local buffer_length = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
     add_cell(buffer_length)
-    vim.api.nvim_win_set_cursor(0, {buffer_length + 1, 0})
 end
 
-M.insert_cell_above = function()
-    vim.notify("Not implemented yet", vim.log.levels.WARN)
+M.insert_cell= function(command)
+    local cell_type = command.fargs[1] or "code"
+    add_cell(4, cell_type)
 end
 
-M.insert_cell_below = function()
-    vim.notify("Not implemented yet", vim.log.levels.WARN)
-end
-
-M.delete_cell = function()
+M.delete_cell = function(command)
     vim.notify("Not implemented yet", vim.log.levels.WARN)
 end
 
