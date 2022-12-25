@@ -2,7 +2,6 @@
 -- Copyright (c) 2022 Owen Campbell
 -- This software is published at https://github.com/meatballs/ipynb.nvim
 
-local json = require("json")
 local render = require("ipynb.render")
 local commands = require("ipynb.commands")
 local M = {}
@@ -15,9 +14,8 @@ local function parse_ipynb_buffer(buffer)
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
     local content = table.concat(lines, "")
     content = content:gsub("\n", "")
-    return json.decode(content)
+    return vim.json.decode(content)
 end
-
 
 M.load_notebook = function(autocmd)
     local buffer = autocmd["buf"]
@@ -35,8 +33,8 @@ M.load_notebook = function(autocmd)
         virt_hl_group = VIRTUAL_TEXT_HL_GROUP
     }
     vim.api.nvim_buf_create_user_command(buffer, "NPAddCell", commands.add_cell, {})
-    vim.api.nvim_buf_create_user_command(buffer, "NPInsertCell", commands.insert_cell, {nargs="?"})
-    vim.api.nvim_buf_create_user_command(buffer, "NPDeleteCell", commands.delete_cell, {nargs="?"})
+    vim.api.nvim_buf_create_user_command(buffer, "NPInsertCell", commands.insert_cell, { nargs = "?" })
+    vim.api.nvim_buf_create_user_command(buffer, "NPDeleteCell", commands.delete_cell, { nargs = "?" })
     render.notebook(buffer, settings)
 
 end
