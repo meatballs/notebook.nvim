@@ -2,6 +2,7 @@
 -- Copyright (c) 2022 Owen Campbell
 -- This software is published at https://github.com/meatballs/ipynb.nvim
 
+local io = require("ipynb.io")
 local render = require("ipynb.render")
 local commands = require("ipynb.commands")
 local M = {}
@@ -10,16 +11,10 @@ local VIRTUAL_TEXT_NAMESPACE = vim.api.nvim_create_namespace("ipynb.virtual")
 local VIRTUAL_TEXT_HL_GROUP = "ipynb_virtual_text"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true }
 
-local function parse_ipynb_buffer(buffer)
-    local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
-    local content = table.concat(lines, "")
-    content = content:gsub("\n", "")
-    return vim.json.decode(content)
-end
 
 M.load_notebook = function(autocmd)
     local buffer = autocmd["buf"]
-    local content = parse_ipynb_buffer(buffer)
+    local content = io.parse_ipynb(buffer)
 
     vim.api.nvim_buf_set_var(buffer, "notebook", content)
     vim.api.nvim_set_hl(VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_HL_GROUP, VIRTUAL_TEXT_STYLE)
