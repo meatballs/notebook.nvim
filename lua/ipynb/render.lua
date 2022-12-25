@@ -4,13 +4,12 @@
 
 local M = {}
 
-local function add_virtual_text(buffer, line, idx, cell)
+local function add_virtual_text(buffer, line, cell)
     local settings = vim.api.nvim_buf_get_var(buffer, "settings")
     local cell_type = cell["cell_type"]
     if cell_type == "code" then cell_type = settings["language"] end
-    local virt_text = "[#" .. idx .. "] " .. cell_type
     local virt_opts = {
-        virt_lines = { { { "" } }, { { virt_text, settings["virt_hl_group"] } } },
+        virt_lines = { { { "" } }, { { cell_type, settings["virt_hl_group"] } } },
         virt_lines_above = true,
     }
     vim.api.nvim_buf_set_extmark(buffer, settings["virt_namespace"], line, 0, virt_opts)
@@ -21,7 +20,7 @@ local function add_extmark(buffer, line, end_line, settings)
     vim.api.nvim_buf_set_extmark(buffer, settings["plugin_namespace"], line, 0, opts)
 end
 
-M.cell = function(buffer, line, idx, cell)
+M.cell = function(buffer, line, cell)
     local settings = vim.api.nvim_buf_get_var(buffer, "settings")
     local source = {}
     for k, v in ipairs(cell["source"]) do
@@ -30,7 +29,7 @@ M.cell = function(buffer, line, idx, cell)
     local end_line = line + #source
 
     vim.api.nvim_buf_set_lines(buffer, line, end_line, false, source)
-    add_virtual_text(buffer, line, idx, cell)
+    add_virtual_text(buffer, line, cell)
     add_extmark(buffer, line, end_line, settings)
 
     return end_line
@@ -45,7 +44,7 @@ M.notebook = function(buffer, settings)
 
     local line = 0
     for idx, cell in ipairs(notebook["cells"]) do
-        line = M.cell(buffer, line, idx, cell)
+        line = M.cell(buffer, line, cell)
     end
 
     vim.api.nvim_buf_set_option(0, "filetype", "notebook")
