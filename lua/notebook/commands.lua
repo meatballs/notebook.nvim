@@ -19,7 +19,7 @@ end
 
 M.insert_cell= function(command)
     local cell_type = command.fargs[1] or "code"
-    add_cell(4, cell_type)
+    vim.notify("Not implemented yet. Cell type: " .. cell_type, vim.log.levels.WARN)
 end
 
 M.delete_cell = function(command)
