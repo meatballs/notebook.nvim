@@ -30,13 +30,23 @@ M.load_notebook = function(autocmd)
     vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", commands.add_cell, {})
     vim.api.nvim_buf_create_user_command(buffer, "NBInsertCell", commands.insert_cell, { nargs = "?" })
     vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", commands.delete_cell, { nargs = "?" })
+    vim.api.nvim_buf_create_user_command(buffer, "NBExecuteCell", commands.execute_cell, {})
     render.notebook(buffer, settings)
 
+end
+
+M.save_notebook = function(autocmd)
+    vim.notify("Not Implemented Yet", vim.log.levels.WARN)
 end
 
 vim.api.nvim_create_autocmd({ "BufRead" }, {
     pattern = { "*.ipynb" },
     callback = M.load_notebook,
+})
+
+vim.api.nvim_create_autocmd( {"BufWrite" }, {
+    pattern = { "*.ipynb"},
+    callback = M.save_notebook,
 })
 
 return M

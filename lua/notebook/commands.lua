@@ -26,4 +26,8 @@ M.delete_cell = function(command)
     vim.notify("Not implemented yet", vim.log.levels.WARN)
 end
 
+M.execute_cell = function(command)
+    vim.notify("Not implemented yet", vim.log.levels.WARN)
+end
+
 return M
