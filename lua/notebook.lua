@@ -16,7 +16,7 @@ M.load_notebook = function(autocmd)
     local buffer = autocmd["buf"]
     local content = io.parse_ipynb(buffer)
 
-    vim.api.nvim_buf_set_var(buffer, "notebook", content)
+    vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
     vim.api.nvim_set_hl(VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_HL_GROUP, VIRTUAL_TEXT_STYLE)
     vim.api.nvim_set_hl_ns(VIRTUAL_TEXT_NAMESPACE)
     vim.api.nvim_buf_clear_namespace(buffer, PLUGIN_NAMESPACE, 0, -1)
