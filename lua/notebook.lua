@@ -30,7 +30,6 @@ M.load_notebook = function(autocmd)
     vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", commands.add_cell, {})
     vim.api.nvim_buf_create_user_command(buffer, "NBInsertCell", commands.insert_cell, { nargs = "?" })
     vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", commands.delete_cell, { nargs = "?" })
-    vim.api.nvim_buf_create_user_command(buffer, "NBExecuteCell", commands.execute_cell, {})
     render.notebook(buffer, settings)
 
 end
