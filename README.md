@@ -1,4 +1,4 @@
-# ipynb.nvim
+# notebook.nvim
 A [neovim](https://neovim.io) plugin to open `.ipynb` notebook files.
 
 *Note:* This plugin is at a very early stage and currently only supports opening existing notebook files.
@@ -10,7 +10,7 @@ Install with your favourite plugin manager. e.g.:
 
 ### Packer
 ```lua
-use {"meatballs/ipynb.nvim"}
+use {"meatballs/notebook.nvim"}
 ```
 
 ## Usage

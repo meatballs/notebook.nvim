@@ -1,6 +1,6 @@
 -- SPDX-License-Identifier: MIT
 -- Copyright (c) 2022 Owen Campbell
--- This software is published at https://github.com/meatballs/ipynb.nvim
+-- This software is published at https://github.com/meatballs/notebook.nvim
 
 local M = {}
 

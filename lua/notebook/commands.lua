@@ -1,5 +1,9 @@
+-- SPDX-License-Identifier: MIT
+-- Copyright (c) 2022 Owen Campbell
+-- This software is published at https://github.com/meatballs/notebook.nvim
+
 local M = {}
-local render = require("ipynb.render")
+local render = require("notebook.render")
 
 local function add_cell(line, cell_type)
     local cell = {cell_type=cell_type, source={""}}

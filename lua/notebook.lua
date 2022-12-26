@@ -1,14 +1,14 @@
 -- SPDX-License-Identifier: MIT
 -- Copyright (c) 2022 Owen Campbell
--- This software is published at https://github.com/meatballs/ipynb.nvim
+-- This software is published at https://github.com/meatballs/notebook.nvim
 
-local io = require("ipynb.io")
-local render = require("ipynb.render")
-local commands = require("ipynb.commands")
+local io = require("notebook.io")
+local render = require("notebook.render")
+local commands = require("notebook.commands")
 local M = {}
-local PLUGIN_NAMESPACE = vim.api.nvim_create_namespace("ipynb")
-local VIRTUAL_TEXT_NAMESPACE = vim.api.nvim_create_namespace("ipynb.virtual")
-local VIRTUAL_TEXT_HL_GROUP = "ipynb_virtual_text"
+local PLUGIN_NAMESPACE = vim.api.nvim_create_namespace("notebook")
+local VIRTUAL_TEXT_NAMESPACE = vim.api.nvim_create_namespace("notebook.virtual")
+local VIRTUAL_TEXT_HL_GROUP = "notebook_virtual_text"
 local VIRTUAL_TEXT_STYLE = { fg = "lightblue", italic = true }
 
 
