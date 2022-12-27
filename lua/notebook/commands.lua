@@ -5,7 +5,18 @@
 local M = {}
 local render = require("notebook.render")
 
-local function add_cell(line, cell_type)
+
+local get_cell_type = function()
+    vim.ui.select({"code", "markdown", "raw"}, {
+        prompt = "Select cell type:",
+    }, function(choice)
+        return choice
+    end
+    )
+end
+
+local function add_cell(line)
+    local cell_type = get_cell_type()
     local cell = { cell_type = cell_type, source = { "" } }
     render.cell(0, line, cell)
     vim.api.nvim_win_set_cursor(0, { line + 1, 0 })

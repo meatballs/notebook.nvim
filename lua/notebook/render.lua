@@ -37,8 +37,6 @@ M.notebook = function(buffer, settings)
     local notebook = vim.api.nvim_buf_get_var(buffer, "notebook.content")
     local extmarks = {}
 
-    settings.language = notebook.metadata.language_info.name
-
     vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
     vim.api.nvim_buf_set_var(buffer, "notebook.settings", settings)
 

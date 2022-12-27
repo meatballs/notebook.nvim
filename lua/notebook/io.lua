@@ -7,21 +7,13 @@ local DEFAULT_NOTEBOOK = {
     cells = {},
     metadata = {
         language_info = {
-            name = "python"
+            name = ""
         },
         nbformat = 4,
         nbformat_minor = 5,
     }
 }
 
-local get_language = function()
-    vim.ui.select({"python", "r", "julia"}, {
-        prompt = "Select language:",
-    }, function(choice)
-        return choice
-    end
-    )
-end
 
 M.parse_ipynb = function(buffer)
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
@@ -31,10 +23,7 @@ M.parse_ipynb = function(buffer)
     if parsed_ok then
         return result
     else
-        local language = get_language()
-        local notebook = DEFAULT_NOTEBOOK
-        notebook.metadata.language_info.name = language or "python"
-        return notebook
+        return DEFAULT_NOTEBOOK
     end
 end
 
