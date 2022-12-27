@@ -36,7 +36,7 @@ M.load_notebook = function(autocmd)
         virt_namespace = VIRTUAL_TEXT_NAMESPACE,
         virt_hl_group = VIRTUAL_TEXT_HL_GROUP
     }
-    vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", commands.add_cell, {})
+    vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", commands.add_cell, {nargs = "?"})
     vim.api.nvim_buf_create_user_command(buffer, "NBInsertCell", commands.insert_cell, { nargs = "?" })
     vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", commands.delete_cell, { nargs = "?" })
     if #content.metadata.language_info.name > 0 then

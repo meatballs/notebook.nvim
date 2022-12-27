@@ -6,25 +6,30 @@ local M = {}
 local render = require("notebook.render")
 
 
-local get_cell_type = function()
-    vim.ui.select({"code", "markdown", "raw"}, {
-        prompt = "Select cell type:",
-    }, function(choice)
-        return choice
-    end
-    )
-end
 
-local function add_cell(line)
-    local cell_type = get_cell_type()
+local function add_cell(line, cell_type)
     local cell = { cell_type = cell_type, source = { "" } }
     render.cell(0, line, cell)
     vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
 end
 
-M.add_cell = function()
-    local buffer_length = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    add_cell(buffer_length)
+local set_cell_type = function(line)
+    vim.ui.select({"code", "markdown", "raw"}, {
+        prompt = "Select cell type:",
+    }, function(choice)
+        add_cell(line, choice)
+    end
+    )
+end
+
+M.add_cell = function(command)
+    local cell_type = command.fargs[1]
+    local last_line = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    if cell_type then
+        add_cell(last_line, cell_type)
+    else
+        set_cell_type(last_line)
+    end
 end
 
 M.insert_cell = function(command)
