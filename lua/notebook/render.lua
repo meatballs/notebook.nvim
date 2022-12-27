@@ -33,15 +33,14 @@ M.cell = function(buffer, line, cell)
     return add_extmark(buffer, line, end_line, settings)
 end
 
-M.notebook = function(buffer, settings)
-    local notebook = vim.api.nvim_buf_get_var(buffer, "notebook.content")
+M.notebook = function(buffer, content, settings)
     local extmarks = {}
 
     vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
     vim.api.nvim_buf_set_var(buffer, "notebook.settings", settings)
 
     local line = 0
-    for _, cell in ipairs(notebook.cells) do
+    for _, cell in ipairs(content.cells) do
         local extmark = M.cell(buffer, line, cell)
         extmarks[extmark] = cell
         line = line + #cell.source

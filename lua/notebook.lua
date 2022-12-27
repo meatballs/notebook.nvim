@@ -16,8 +16,7 @@ local set_language = function(buffer, content, settings)
         prompt = "Select language:",
     }, function(choice)
         settings.language = choice
-        vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
-        render.notebook(buffer, settings)
+        render.notebook(buffer, content, settings)
     end
     )
 end
@@ -41,8 +40,7 @@ M.load_notebook = function(autocmd)
     vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", commands.delete_cell, { nargs = "?" })
     if #content.metadata.language_info.name > 0 then
         settings.language = content.metadata.language_info.name
-        vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
-        render.notebook(buffer, settings)
+        render.notebook(buffer, content, settings)
     else
         set_language(buffer, content, settings)
     end
