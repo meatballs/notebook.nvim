@@ -39,12 +39,12 @@ M.load_notebook = function(autocmd)
     vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", commands.add_cell, {})
     vim.api.nvim_buf_create_user_command(buffer, "NBInsertCell", commands.insert_cell, { nargs = "?" })
     vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", commands.delete_cell, { nargs = "?" })
-    if content.metadata.language_info.name then
+    if #content.metadata.language_info.name > 0 then
         settings.language = content.metadata.language_info.name
         vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
         render.notebook(buffer, settings)
     else
-        set_language()
+        set_language(buffer, content, settings)
     end
 
 end
