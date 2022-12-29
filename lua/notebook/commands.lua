@@ -9,7 +9,10 @@ local render = require("notebook.render")
 
 local function add_cell(line, cell_type)
     local cell = { cell_type = cell_type, source = { "" } }
-    render.cell(0, line, cell)
+    local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
+    local content = vim.api.nvim_buf_get_var(0, "notebook.content")
+    local language = content.metadata.language_info.name
+    render.cell(0, line, cell, settings, language)
     vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
 end
 
