@@ -2,7 +2,7 @@
 -- Copyright (c) 2022 Owen Campbell
 -- This software is published at https://github.com/meatballs/notebook.nvim
 
-local io = require("notebook.io")
+local ipynb = require("notebook.ipynb")
 local render = require("notebook.render")
 local commands = require("notebook.commands")
 local M = {}
@@ -21,9 +21,9 @@ local set_language = function(buffer, content, settings)
     )
 end
 
-M.load_notebook = function(autocmd)
+M.read_notebook = function(autocmd)
     local buffer = autocmd["buf"]
-    local content = io.parse_ipynb(buffer)
+    local content = ipynb.load(buffer)
 
     vim.api.nvim_set_hl(VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_HL_GROUP, VIRTUAL_TEXT_STYLE)
     vim.api.nvim_set_hl_ns(VIRTUAL_TEXT_NAMESPACE)
@@ -47,18 +47,22 @@ M.load_notebook = function(autocmd)
 
 end
 
-M.save_notebook = function(autocmd)
-    vim.notify("Not Implemented Yet", vim.log.levels.WARN)
+M.write_notebook = function(autocmd)
+    local content = ipynb.dump(autocmd.buf)
+    local file = io.open(autocmd.file, "w")
+    file:write(content)
+    io.close()
+
 end
 
 vim.api.nvim_create_autocmd({ "BufRead" }, {
     pattern = { "*.ipynb" },
-    callback = M.load_notebook,
+    callback = M.read_notebook,
 })
 
-vim.api.nvim_create_autocmd({ "BufWrite" }, {
+vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
     pattern = { "*.ipynb" },
-    callback = M.save_notebook,
+    callback = M.write_notebook,
 })
 
 return M
