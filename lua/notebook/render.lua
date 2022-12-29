@@ -41,6 +41,10 @@ M.notebook = function(buffer, content, settings)
 
     local line = 0
     for _, cell in ipairs(content.cells) do
+        if #cell.metadata == 0 then
+            cell.metadata = {}
+        end
+        cell.outputs = nil
         local extmark = M.cell(buffer, line, cell, settings, language)
         extmarks[extmark] = cell
         line = line + #cell.source

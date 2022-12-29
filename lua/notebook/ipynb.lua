@@ -28,25 +28,31 @@ end
 
 M.dump = function(buffer)
     local content = vim.api.nvim_buf_get_var(buffer, "notebook.content")
+    local settings = vim.api.nvim_buf_get_var(buffer, "notebook.settings")
     local extmarks = vim.api.nvim_buf_get_var(buffer, "notebook.extmarks")
     local default_cell_metadata = { collapsed = false }
-    local ipynb = {
-        metadata = content.metadata,
-        nbformat = content.nbformat,
-        nbformat_minor = content.nbformat_minor,
-        cells = {
-            {
-                cell_type = "markdown",
-                metadata = default_cell_metadata,
-                source = { "## Hello World" },
-            },
-            {
-                cell_type = "code",
-                metadata = default_cell_metadata,
-                source = { "test = [1,2,3]"}
-            }
-        },
-    }
+
+    local cells = {}
+    for id, cell in pairs(extmarks) do
+        if cell.metadata == nil or #cell.metadata == 0 then
+            cell.metadata = default_cell_metadata
+        end
+        local extmark = vim.api.nvim_buf_get_extmark_by_id(
+            buffer, settings.plugin_namespace, id, { details = true }
+        )
+        local end_row = extmark[3].end_row
+        local source = vim.api.nvim_buf_get_lines(buffer, extmark[1], end_row, true)
+        if #source > 0 then
+            for idx, v in pairs(source) do
+                source[idx] = v .. "\n"
+            end
+            cell.source = source
+            table.insert(cells, cell)
+        end
+    end
+
+    local ipynb = content
+    ipynb.cells = cells
     return vim.json.encode(ipynb)
 end
 

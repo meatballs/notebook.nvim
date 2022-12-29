@@ -22,7 +22,7 @@ local set_language = function(buffer, content, settings)
 end
 
 M.read_notebook = function(autocmd)
-    local buffer = autocmd["buf"]
+    local buffer = autocmd.buf
     local content = ipynb.load(buffer)
 
     vim.api.nvim_set_hl(VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_HL_GROUP, VIRTUAL_TEXT_STYLE)
@@ -44,14 +44,16 @@ M.read_notebook = function(autocmd)
         set_language(buffer, content, settings)
     end
 
+
+
 end
 
 M.write_notebook = function(autocmd)
     local content = ipynb.dump(autocmd.buf)
     local file = io.open(autocmd.file, "w")
     file:write(content)
-    io.close()
-
+    file.close()
+    vim.api.nvim_buf_set_option(autocmd.buf, "modified", false)
 end
 
 vim.api.nvim_create_autocmd({ "BufRead" }, {
