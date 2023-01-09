@@ -1,8 +1,6 @@
 # notebook.nvim
 A [neovim](https://neovim.io) plugin to open `.ipynb` notebook files.
 
-*Note:* This plugin is at a very early stage and currently only supports opening existing notebook files.
-
 To run notebook cells, you might also want to install the [magma](https://github.com/dccsillag/magma-nvim/) plugin.
 
 ## Installation
@@ -15,3 +13,7 @@ use {"meatballs/notebook.nvim"}
 
 ## Usage
 Open an existing `.ipynb` file.
+
+You can add a new cell using `:NBAddCell`
+
+You can then edit the content of any cell and saving the buffer will correctly write your changes back to your notebook file.
