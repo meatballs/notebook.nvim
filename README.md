@@ -11,6 +11,13 @@ Install with your favourite plugin manager. e.g.:
 use {"meatballs/notebook.nvim"}
 ```
 
+## Configuration
+Add the following to your `init.lua`:
+
+```lua
+require('notebook')
+```
+
 ## Usage
 Open an existing `.ipynb` file.
 
