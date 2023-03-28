@@ -51,7 +51,7 @@ M.notebook = function(buffer, content, settings)
     end
 
     vim.api.nvim_buf_set_var(buffer, "notebook.extmarks", extmarks)
-    vim.api.nvim_buf_set_option(0, "filetype", "notebook")
+    vim.api.nvim_buf_set_option(0, "filetype", language)
 end
 
 return M
