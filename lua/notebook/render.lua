@@ -37,7 +37,7 @@ M.notebook = function(buffer, content, settings)
     vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
     vim.api.nvim_buf_set_var(buffer, "notebook.settings", settings)
     vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
-    local language = content.metadata.language_info.name
+    local language = content.metadata.kernelspec.language
 
     local line = 0
     for _, cell in ipairs(content.cells) do

@@ -15,10 +15,10 @@ local set_language = function(buffer, content, settings)
     vim.ui.select({ "python", "r", "julia" }, {
         prompt = "Select language:",
     }, function(choice)
-        if not content.metadata.language_info then
-            content.metadata.language_info = {}
+        if not content.metadata.kernelspec then
+            content.metadata.kernelspec = {}
         end
-        content.metadata.language_info.name = choice
+        content.metadata.kernelspec.language = choice
         render.notebook(buffer, content, settings)
     end
     )
@@ -42,8 +42,7 @@ M.read_notebook = function(autocmd)
     vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", commands.add_cell, {nargs = "?"})
     vim.api.nvim_buf_create_user_command(buffer, "NBInsertCell", commands.insert_cell, { nargs = "?" })
     vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", commands.delete_cell, { nargs = "?" })
-    local language_info = content.metadata.language_info
-    if language_info and language_info.name then
+    if content.metadata.kernelspec and content.metadata.kernelspec.language then
         render.notebook(buffer, content, settings)
     else
         set_language(buffer, content, settings)
