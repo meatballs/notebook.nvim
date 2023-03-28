@@ -40,8 +40,8 @@ M.cell = function(buffer, line, cell, settings, language)
 
     if cell.cell_type == "markdown" then
         local markers = comment_markers[language]
-        table.insert(source, 1, markers["start"] .. " start markdown")
-        table.insert(source, "end markdown " .. markers["finish"])
+        table.insert(source, 1, markers["start"] .. "---")
+        table.insert(source, markers["finish"])
         source_start_line = source_start_line + 1
         source_end_line = source_end_line + 1
         end_line = end_line + 2
