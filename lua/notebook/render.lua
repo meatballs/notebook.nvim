@@ -14,8 +14,9 @@ local comment_markers = {
 local function add_virtual_text(buffer, line, cell, settings, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
+    local text = "[" .. cell_type .. "]"
     local virt_opts = {
-        virt_lines = { { { "" } }, { { cell_type, settings.virt_hl_group } } },
+        virt_lines = { { { "" } }, { { text, settings.virt_hl_group } } },
         virt_lines_above = true,
     }
     vim.api.nvim_buf_set_extmark(buffer, settings.virt_namespace, line, 0, virt_opts)
