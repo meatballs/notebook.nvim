@@ -4,6 +4,13 @@
 
 local M = {}
 
+local comment_markers = {
+    python = { start = '"""', finish = '"""' },
+    r = { start = '"', finish = '"' },
+    julia = { start = '#=', finish = '=#' }
+}
+
+
 local function add_virtual_text(buffer, line, cell, settings, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
@@ -21,14 +28,28 @@ end
 
 M.cell = function(buffer, line, cell, settings, language)
     local source = {}
+    local source_start_line = line
+    local source_end_line
+    local end_line
+
     for k, v in ipairs(cell.source) do
         source[k] = v:gsub("\n", "")
     end
-    local end_line = line + #source
+    source_end_line = line + #source
+    end_line = source_end_line
+
+    if cell.cell_type == "markdown" then
+        local markers = comment_markers[language]
+        table.insert(source, 1, markers["start"] .. "---")
+        table.insert(source, markers["finish"])
+        source_start_line = source_start_line + 1
+        source_end_line = source_end_line + 1
+        end_line = end_line + 2
+    end
 
     vim.api.nvim_buf_set_lines(buffer, line, end_line, false, source)
     add_virtual_text(buffer, line, cell, settings, language)
-    return add_extmark(buffer, line, end_line, settings)
+    return add_extmark(buffer, source_start_line, source_end_line, settings)
 end
 
 M.notebook = function(buffer, content, settings)
@@ -48,6 +69,7 @@ M.notebook = function(buffer, content, settings)
         local extmark = M.cell(buffer, line, cell, settings, language)
         extmarks[extmark] = cell
         line = line + #cell.source
+        if cell.cell_type == "markdown" then line = line + 2 end
     end
 
     vim.api.nvim_buf_set_var(buffer, "notebook.extmarks", extmarks)
