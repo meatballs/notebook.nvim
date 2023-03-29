@@ -12,7 +12,7 @@ local function add_cell(cell)
     local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
     local content = vim.api.nvim_buf_get_var(0, "notebook.content")
     local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
-    local language = content.metadata.language_info.name
+    local language = content.metadata.kernelspec.language
     local extmark = render.cell(0, last_line, cell, settings, language)
     extmarks[extmark] = cell
     vim.api.nvim_win_set_cursor(0, { last_line + 1, 0 })
