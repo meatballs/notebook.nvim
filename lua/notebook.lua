@@ -30,6 +30,10 @@ M.read_notebook = function(autocmd)
     local buffer = autocmd.buf
     local content = ipynb.load(buffer)
 
+    if not content then
+        content = { metadata = {}, cells = {} }
+    end
+
     vim.api.nvim_set_hl(VIRTUAL_TEXT_NAMESPACE, VIRTUAL_TEXT_HL_GROUP, VIRTUAL_TEXT_STYLE)
     vim.api.nvim_set_hl_ns(VIRTUAL_TEXT_NAMESPACE)
     vim.api.nvim_buf_clear_namespace(buffer, PLUGIN_NAMESPACE, 0, -1)
@@ -48,9 +52,6 @@ M.read_notebook = function(autocmd)
     else
         set_language(buffer, content, settings)
     end
-
-
-
 end
 
 M.write_notebook = function(autocmd)
@@ -63,7 +64,7 @@ M.write_notebook = function(autocmd)
     end
 end
 
-vim.api.nvim_create_autocmd({ "BufRead" }, {
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "*.ipynb" },
     callback = M.read_notebook,
 })

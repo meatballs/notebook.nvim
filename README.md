@@ -66,7 +66,7 @@ end
 
 -- Init magma when opening an ipynb file
 vim.api.nvim_create_autocmd(
-    { "BufRead", "BufNewFile" },
+    { "BufRead", },
     { pattern = { "*.ipynb" }, command = "MagmaInit" }
 )
 -- Define all cells after magma init
