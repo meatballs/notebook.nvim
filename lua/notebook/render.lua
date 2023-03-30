@@ -48,7 +48,11 @@ M.cell = function(buffer, line, cell, settings, language)
         end_line = end_line + 2
     end
 
-    vim.api.nvim_buf_set_lines(buffer, line, end_line, false, source)
+    if #source == 0 then
+        table.insert(source, 1, "")
+    end
+
+    vim.api.nvim_buf_set_lines(buffer, line, line, false, source)
     add_virtual_text(buffer, line, cell, settings, language)
     return add_extmark(buffer, source_start_line, source_end_line, settings)
 end
@@ -56,9 +60,7 @@ end
 M.notebook = function(buffer, content, settings)
     local extmarks = {}
 
-    vim.api.nvim_buf_set_lines(buffer, 0, -1, true, {})
-    vim.api.nvim_buf_set_var(buffer, "notebook.settings", settings)
-    vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
+    vim.api.nvim_buf_set_lines(buffer, 0, -1, false, {})
     local language = content.metadata.kernelspec.language
 
     local line = 0
@@ -73,8 +75,10 @@ M.notebook = function(buffer, content, settings)
         if cell.cell_type == "markdown" then line = line + 2 end
     end
 
+    vim.api.nvim_buf_set_var(buffer, "notebook.settings", settings)
+    vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
     vim.api.nvim_buf_set_var(buffer, "notebook.extmarks", extmarks)
-    vim.api.nvim_buf_set_option(0, "filetype", language)
+    vim.api.nvim_buf_set_option(buffer, "filetype", language)
 end
 
 return M

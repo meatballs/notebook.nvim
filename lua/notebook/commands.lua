@@ -6,16 +6,38 @@ local M = {}
 local render = require("notebook.render")
 
 
+local function current_extmark(line)
+    local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
+    local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
+    for id, _ in pairs(extmarks) do
+        local extmark = vim.api.nvim_buf_get_extmark_by_id(
+            0, settings.plugin_namespace, id, {details=true}
+        )
+        local start_line = extmark[1] + 1
+        local end_line = extmark[3].end_row
+        if line >= start_line and line <= end_line then
+            return extmark, id
+        end
+    end
 
-local function add_cell(cell)
-    local last_line = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
+end
+
+local function add_cell(cell, line)
     local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
     local content = vim.api.nvim_buf_get_var(0, "notebook.content")
     local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
     local language = content.metadata.kernelspec.language
-    local extmark = render.cell(0, last_line, cell, settings, language)
+
+    if not line then
+        line = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    else
+        local extmark, _ = current_extmark(line)
+        line = extmark[3].end_row + 1
+    end
+
+    local extmark = render.cell(0, line, cell, settings, language)
     extmarks[extmark] = cell
-    vim.api.nvim_win_set_cursor(0, { last_line + 1, 0 })
+    vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
     vim.api.nvim_buf_set_var(0, "notebook.extmarks", extmarks)
 end
 
@@ -24,7 +46,7 @@ local set_cell_type = function(line)
         prompt = "Select cell type:",
     }, function(choice)
         local cell = { cell_type = choice, source = { "" } }
-        add_cell(cell)
+        add_cell(cell, line)
     end
     )
 end
@@ -40,8 +62,14 @@ M.add_cell = function(command)
 end
 
 M.insert_cell = function(command)
-    local cell_type = command.fargs[1] or "code"
-    vim.notify("Not implemented yet. Cell type: " .. cell_type, vim.log.levels.WARN)
+    local cell_type = command.fargs[1]
+    local line = vim.api.nvim__buf_stats(0).current_lnum
+    if cell_type then
+        local cell = { cell_type = cell_type, source = { "" } }
+        add_cell(cell, line)
+    else
+        set_cell_type(line)
+    end
 end
 
 M.delete_cell = function(command)
