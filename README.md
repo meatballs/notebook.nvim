@@ -29,8 +29,6 @@ You can then edit the content of any cell and saving the buffer will correctly w
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
 
 ```lua
-require("notebook")
-
 function _G.define_cell()
     -- Using the current line, define a magma cell from the ipynb cell
     local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
