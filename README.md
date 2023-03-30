@@ -73,6 +73,11 @@ vim.api.nvim_create_autocmd(
     { "BufRead", "BufNewFile" },
     { pattern = { "*.ipynb" }, command = "MagmaInit" }
 )
+-- Define all cells after magma init
+vim.api.nvim_create_autocmd(
+     "User",
+    {pattern = "MagmaInitPost", callback = _G.define_all_cells }
+)
 ```
 
 NOTE: For these to work, you must use the 'meatballs' fork of the magma plugin as linked above.
