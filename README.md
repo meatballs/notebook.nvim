@@ -17,7 +17,7 @@ require('notebook')
 ```
 
 ## Usage
-Open an existing `.ipynb` file.
+Open an existing `.ipynb` file or create a new one.
 
 You can add a new cell using `:NBAddCell`
 
