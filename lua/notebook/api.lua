@@ -6,7 +6,7 @@ local M = {}
 local render = require("notebook.render")
 
 
-local function current_extmark(line)
+M.current_extmark = function(line)
     local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
     local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
     for id, _ in pairs(extmarks) do
@@ -19,7 +19,6 @@ local function current_extmark(line)
             return extmark, id
         end
     end
-
 end
 
 local function add_cell(cell, line)
@@ -31,7 +30,7 @@ local function add_cell(cell, line)
     if not line then
         line = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
     else
-        local extmark, _ = current_extmark(line)
+        local extmark, _ = M.current_extmark(line)
         line = extmark[3].end_row + 1
     end
 

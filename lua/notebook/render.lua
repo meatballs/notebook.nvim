@@ -24,7 +24,9 @@ end
 
 local function add_extmark(buffer, line, end_line, settings)
     local opts = { end_line = end_line }
-    return vim.api.nvim_buf_set_extmark(buffer, settings.plugin_namespace, line, 0, opts)
+    return vim.api.nvim_buf_set_extmark(
+        buffer, settings.plugin_namespace, line, 0, opts
+    )
 end
 
 M.cell = function(buffer, line, cell, settings, language)
