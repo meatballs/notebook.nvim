@@ -72,10 +72,11 @@ M.insert_cell = function(command)
 end
 
 M.delete_cell = function(command)
+    local buffer = vim.api.nvim_get_current_buf()
     local  _, idx = M.current_extmark()
     local content = vim.b.notebook.content
     table.remove(content.cells, idx)
-    render.notebook(0, content)
+    render.notebook(buffer, content)
 end
 
 return M
