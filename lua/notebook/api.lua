@@ -7,7 +7,11 @@ local settings = require("notebook.settings")
 
 
 M.current_extmark = function(line)
-    local extmarks = vim.b.notebook.extmarks
+    local buffer = vim.api.nvim_get_current_buf()
+    if not line then
+        line = vim.api.nvim__buf_stats(0).current_lnum
+    end
+    local extmarks = settings.extmarks[buffer]
     for id, _ in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
             0, settings.plugin_namespace, id, {details=true}
@@ -21,8 +25,9 @@ M.current_extmark = function(line)
 end
 
 local function add_cell(cell, line)
-    local content = vim.b.notebook.content
-    local extmarks = vim.b.notebook.extmarks
+    local buffer = vim.api.nvim_get_current_buf()
+    local content = settings.content[buffer]
+    local extmarks = settings.extmarks[buffer]
     local language = content.metadata.kernelspec.language
 
     if not line then
@@ -70,7 +75,14 @@ M.insert_cell = function(command)
 end
 
 M.delete_cell = function(command)
-    vim.notify("Not implemented yet", vim.log.levels.WARN)
+    local idx = command.fargs[1]
+    if not idx then
+        _, idx = M.current_extmark()
+    end
+    local buffer = vim.api.nvim_get_current_buf()
+    local content = settings.content[buffer]
+    table.remove(content.cells, idx)
+    render.notebook(buffer, content)
 end
 
 return M

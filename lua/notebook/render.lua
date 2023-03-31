@@ -10,7 +10,6 @@ local comment_markers = {
     julia = { start = '#=', finish = '=#' }
 }
 
-
 local function add_virtual_text(buffer, line, cell, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
@@ -63,7 +62,7 @@ end
 
 M.notebook = function(buffer, content)
     local extmarks = {}
-
+    vim.api.nvim_buf_clear_namespace(buffer, settings.virtual_text_namespace, 0, -1)
     vim.api.nvim_buf_set_lines(buffer, 0, -1, false, {})
     local language = content.metadata.kernelspec.language
 
@@ -79,7 +78,8 @@ M.notebook = function(buffer, content)
         if cell.cell_type == "markdown" then line = line + 2 end
     end
 
-    vim.b.notebook = { content = content, extmarks = extmarks }
+    settings.content[buffer] = content
+    settings.extmarks[buffer] = extmarks
     vim.api.nvim_buf_set_option(buffer, "filetype", language)
 end
 

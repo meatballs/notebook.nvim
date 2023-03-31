@@ -7,7 +7,6 @@ local settings = require("notebook.settings")
 M.load = function(buffer)
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
     local content = table.concat(lines, "")
-    content = content:gsub("\n", "")
     local parsed_ok, result = pcall(vim.json.decode, content)
     if parsed_ok then
         return result
@@ -17,8 +16,8 @@ M.load = function(buffer)
 end
 
 M.dump = function(buffer)
-    local content = vim.b.notebook.content
-    local extmarks = vim.b.notebook.extmarks
+    local content = settings.content[buffer]
+    local extmarks = settings.extmarks[buffer]
     local default_cell_metadata = { collapsed = false }
 
     local cells = {}

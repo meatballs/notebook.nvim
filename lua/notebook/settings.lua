@@ -12,5 +12,7 @@ M.empty_notebook = {
     nbformat = 4,
     nbformat_minor = 5,
 }
+M.content = {}
+M.extmarks = {}
 
 return M
