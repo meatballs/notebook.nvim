@@ -37,7 +37,7 @@ function _G.define_cell(extmark)
     end
     local start_line = extmark[1] + 1
     local end_line = extmark[3].end_row
-    vim.fn.MagmaDefineCell(start_line, end_line)
+    pcall(function() vim.fn.MagmaDefineCell(start_line, end_line) end)
 end
 
 function _G.define_all_cells()

@@ -81,6 +81,7 @@ M.notebook = function(buffer, content)
     settings.content[buffer] = content
     settings.extmarks[buffer] = extmarks
     vim.api.nvim_buf_set_option(buffer, "filetype", language)
+    vim.cmd({cmd="doautocmd", args={"User", "NBPostRender"}})
 end
 
 return M
