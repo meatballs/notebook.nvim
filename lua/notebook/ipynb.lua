@@ -1,18 +1,8 @@
 -- SPDX-License-Identifier: MIT
 -- Copyright (c) 2022 Owen Campbell
 -- This software is published at https://github.com/meatballs/notebook.nvim
-
 local M = {}
-local DEFAULT_NOTEBOOK = {
-    cells = {},
-    metadata = {
-        language_info = {
-            name = ""
-        },
-        nbformat = 4,
-        nbformat_minor = 5,
-    }
-}
+local settings = require("notebook.settings")
 
 M.load = function(buffer)
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, -1, true)
@@ -22,14 +12,13 @@ M.load = function(buffer)
     if parsed_ok then
         return result
     else
-        return DEFAULT_NOTEBOOK
+        return settings.empty_notebook
     end
 end
 
 M.dump = function(buffer)
-    local settings = vim.b.notebook_settings
-    local content = vim.b.notebook_content
-    local extmarks = vim.b.notebook_extmarks
+    local content = vim.b.notebook.content
+    local extmarks = vim.b.notebook.extmarks
     local default_cell_metadata = { collapsed = false }
 
     local cells = {}

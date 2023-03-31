@@ -1,14 +1,13 @@
 -- SPDX-License-Identifier: MIT
 -- Copyright (c) 2022 Owen Campbell
 -- This software is published at https://github.com/meatballs/notebook.nvim
-
 local M = {}
 local render = require("notebook.render")
+local settings = require("notebook.settings")
 
 
 M.current_extmark = function(line)
-    local settings = vim.b.notebook_settings
-    local extmarks = vim.b.notebook_extmarks
+    local extmarks = vim.b.notebook.extmarks
     for id, _ in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
             0, settings.plugin_namespace, id, {details=true}
@@ -22,9 +21,8 @@ M.current_extmark = function(line)
 end
 
 local function add_cell(cell, line)
-    local settings = vim.b.notebook_settings
-    local content = vim.b.notebook_content
-    local extmarks = vim.b.notebook_extmarks
+    local content = vim.b.notebook.content
+    local extmarks = vim.b.notebook.extmarks
     local language = content.metadata.kernelspec.language
 
     if not line then
@@ -34,7 +32,7 @@ local function add_cell(cell, line)
         line = extmark[3].end_row + 1
     end
 
-    local extmark = render.cell(0, line, cell, settings, language)
+    local extmark = render.cell(0, line, cell, language)
     extmarks[extmark] = cell
     vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
     vim.b.extmarks = extmarks

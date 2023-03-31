@@ -1,8 +1,8 @@
 -- SPDX-License-Identifier: MIT
 -- Copyright (c) 2022 Owen Campbell
 -- This software is published at https://github.com/meatballs/notebook.nvim
-
 local M = {}
+local settings = require("notebook.settings")
 
 local comment_markers = {
     python = { start = '"""', finish = '"""' },
@@ -11,25 +11,27 @@ local comment_markers = {
 }
 
 
-local function add_virtual_text(buffer, line, cell, settings, language)
+local function add_virtual_text(buffer, line, cell, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
     local text = "[" .. cell_type .. "]"
     local virt_opts = {
-        virt_lines = { { { "" } }, { { text, settings.virt_hl_group } } },
+        virt_lines = { { { "" } }, { { text, settings.virtual_text_hl_group } } },
         virt_lines_above = true,
     }
-    vim.api.nvim_buf_set_extmark(buffer, settings.virt_namespace, line, 0, virt_opts)
+    vim.api.nvim_buf_set_extmark(
+        buffer, settings.virtual_text_namespace, line, 0, virt_opts
+    )
 end
 
-local function add_extmark(buffer, line, end_line, settings)
+local function add_extmark(buffer, line, end_line)
     local opts = { end_line = end_line }
     return vim.api.nvim_buf_set_extmark(
         buffer, settings.plugin_namespace, line, 0, opts
     )
 end
 
-M.cell = function(buffer, line, cell, settings, language)
+M.cell = function(buffer, line, cell, language)
     local source = {}
     local source_start_line = line
     local source_end_line
@@ -55,11 +57,11 @@ M.cell = function(buffer, line, cell, settings, language)
     end
 
     vim.api.nvim_buf_set_lines(buffer, line, line, false, source)
-    add_virtual_text(buffer, line, cell, settings, language)
-    return add_extmark(buffer, source_start_line, source_end_line, settings)
+    add_virtual_text(buffer, line, cell, language)
+    return add_extmark(buffer, source_start_line, source_end_line)
 end
 
-M.notebook = function(buffer, content, settings)
+M.notebook = function(buffer, content)
     local extmarks = {}
 
     vim.api.nvim_buf_set_lines(buffer, 0, -1, false, {})
@@ -71,15 +73,13 @@ M.notebook = function(buffer, content, settings)
             cell.metadata = {}
         end
         cell.outputs = nil
-        local extmark = M.cell(buffer, line, cell, settings, language)
+        local extmark = M.cell(buffer, line, cell, language)
         extmarks[extmark] = cell
         line = line + #cell.source
         if cell.cell_type == "markdown" then line = line + 2 end
     end
 
-    vim.b.notebook_settings = settings
-    vim.b.notebook_content = content
-    vim.b.notebook_extmarks = extmarks
+    vim.b.notebook = { content = content, extmarks = extmarks }
     vim.api.nvim_buf_set_option(buffer, "filetype", language)
 end
 

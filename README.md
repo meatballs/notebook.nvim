@@ -41,8 +41,8 @@ function _G.define_cell(extmark)
 end
 
 function _G.define_all_cells()
-    local extmarks = vim.b.notebook_extmarks
-    local settings = vim.b.notebook_settings
+    local extmarks = vim.b.notebook.extmarks
+    local settings = vim.b.notebook.settings
 
     for id, cell in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
