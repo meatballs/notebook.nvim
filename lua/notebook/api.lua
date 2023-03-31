@@ -47,14 +47,20 @@ local set_cell_type = function(line)
     )
 end
 
-M.add_cell = function(command)
-    if vim.o.modified then
+local function has_unsaved_changes(operation)
+    local result = vim.o.modified
+    if result then
         vim.notify(
-            "There are unsaved changes. Save your notebook before adding cells",
+            "There are unsaved changes. Save your notebook before " .. operation .. " cells",
             vim.log.levels.WARN
         )
-        return
     end
+    return result
+end
+
+
+M.add_cell = function(command)
+    if has_unsaved_changes("adding") then return end
     local cell_type = command.fargs[1]
     if cell_type then
         local cell = { cell_type = cell_type, source = { "" } }
@@ -65,13 +71,7 @@ M.add_cell = function(command)
 end
 
 M.insert_cell = function(command)
-    if vim.o.modified then
-        vim.notify(
-            "There are unsaved changes. Save your notebook before adding cells",
-            vim.log.levels.WARN
-        )
-        return
-    end
+    if has_unsaved_changes("adding") then return end
     local cell_type = command.fargs[1]
     local line = vim.api.nvim__buf_stats(0).current_lnum
     if cell_type then
@@ -83,13 +83,7 @@ M.insert_cell = function(command)
 end
 
 M.delete_cell = function(command)
-    if vim.o.modified then
-        vim.notify(
-            "There are unsaved changes. Save your notebook before deleting cells",
-            vim.log.levels.WARN
-        )
-        return
-    end
+    if has_unsaved_changes("deleting") then return end
     local buffer = vim.api.nvim_get_current_buf()
     local _, idx = M.current_extmark()
     local content = vim.b.notebook.content
