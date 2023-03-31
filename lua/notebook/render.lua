@@ -57,11 +57,15 @@ M.cell = function(buffer, line, cell, language)
 
     vim.api.nvim_buf_set_lines(buffer, line, line, false, source)
     add_virtual_text(buffer, line, cell, language)
-    return add_extmark(buffer, source_start_line, source_end_line)
+    local extmark = add_extmark(buffer, source_start_line, source_end_line)
+    settings.extmarks[buffer][extmark] = cell
 end
 
 M.notebook = function(buffer, content)
-    local extmarks = {}
+    -- This seems to break if we use a vim buffer variable, so we'll use settings
+    -- instead
+    settings.extmarks[buffer] = {}
+
     vim.api.nvim_buf_clear_namespace(buffer, settings.virtual_text_namespace, 0, -1)
     vim.api.nvim_buf_set_lines(buffer, 0, -1, false, {})
     local language = content.metadata.kernelspec.language
@@ -72,16 +76,15 @@ M.notebook = function(buffer, content)
             cell.metadata = {}
         end
         cell.outputs = nil
-        local extmark = M.cell(buffer, line, cell, language)
-        extmarks[extmark] = cell
+        M.cell(buffer, line, cell, language)
         line = line + #cell.source
         if cell.cell_type == "markdown" then line = line + 2 end
     end
 
-    settings.content[buffer] = content
-    settings.extmarks[buffer] = extmarks
+    -- Use a vim buffer variable so it gets cleared when the buffer is deleted
+    vim.b.notebook = { content = content }
     vim.api.nvim_buf_set_option(buffer, "filetype", language)
-    vim.cmd({cmd="doautocmd", args={"User", "NBPostRender"}})
+    vim.cmd({ cmd = "doautocmd", args = { "User", "NBPostRender" } })
 end
 
 return M

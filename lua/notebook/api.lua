@@ -26,8 +26,7 @@ end
 
 local function add_cell(cell, line)
     local buffer = vim.api.nvim_get_current_buf()
-    local content = settings.content[buffer]
-    local extmarks = settings.extmarks[buffer]
+    local content = vim.b.notebook.content
     local language = content.metadata.kernelspec.language
 
     if not line then
@@ -37,10 +36,8 @@ local function add_cell(cell, line)
         line = extmark[3].end_row + 1
     end
 
-    local extmark = render.cell(0, line, cell, language)
-    extmarks[extmark] = cell
+    render.cell(buffer, line, cell, language)
     vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
-    vim.b.extmarks = extmarks
 end
 
 local set_cell_type = function(line)
@@ -76,10 +73,9 @@ end
 
 M.delete_cell = function(command)
     local  _, idx = M.current_extmark()
-    local buffer = vim.api.nvim_get_current_buf()
-    local content = settings.content[buffer]
+    local content = vim.b.notebook.content
     table.remove(content.cells, idx)
-    render.notebook(buffer, content)
+    render.notebook(0, content)
 end
 
 return M

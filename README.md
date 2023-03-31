@@ -47,7 +47,6 @@ end
 function _G.define_all_cells()
     local buffer = vim.api.nvim_get_current_buf()
     local extmarks = settings.extmarks[buffer]
-
     for id, cell in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
             0, settings.plugin_namespace, id, { details = true }

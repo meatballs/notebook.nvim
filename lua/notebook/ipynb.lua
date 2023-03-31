@@ -16,7 +16,7 @@ M.load = function(buffer)
 end
 
 M.dump = function(buffer)
-    local content = settings.content[buffer]
+    local content = vim.b.notebook.content
     local extmarks = settings.extmarks[buffer]
     local default_cell_metadata = { collapsed = false }
 
