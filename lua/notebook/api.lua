@@ -5,25 +5,6 @@ local M = {}
 local render = require("notebook.render")
 local settings = require("notebook.settings")
 
-
-M.current_extmark = function(line)
-    local buffer = vim.api.nvim_get_current_buf()
-    if not line then
-        line = vim.api.nvim__buf_stats(0).current_lnum
-    end
-    local extmarks = settings.extmarks[buffer]
-    for id, _ in pairs(extmarks) do
-        local extmark = vim.api.nvim_buf_get_extmark_by_id(
-            0, settings.plugin_namespace, id, { details = true }
-        )
-        local start_line = extmark[1] + 1
-        local end_line = extmark[3].end_row
-        if line >= start_line and line <= end_line then
-            return extmark, id
-        end
-    end
-end
-
 local function add_cell(cell, line)
     local buffer = vim.api.nvim_get_current_buf()
     local content = vim.b.notebook.content
@@ -56,6 +37,24 @@ local function has_unsaved_changes(operation)
         )
     end
     return result
+end
+
+M.current_extmark = function(line)
+    local buffer = vim.api.nvim_get_current_buf()
+    if not line then
+        line = vim.api.nvim__buf_stats(0).current_lnum
+    end
+    local extmarks = settings.extmarks[buffer]
+    for id, _ in pairs(extmarks) do
+        local extmark = vim.api.nvim_buf_get_extmark_by_id(
+            0, settings.plugin_namespace, id, { details = true }
+        )
+        local start_line = extmark[1] + 1
+        local end_line = extmark[3].end_row
+        if line >= start_line and line <= end_line then
+            return extmark, id
+        end
+    end
 end
 
 
