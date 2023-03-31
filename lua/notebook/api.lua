@@ -5,7 +5,7 @@ local M = {}
 local render = require("notebook.render")
 local settings = require("notebook.settings")
 
-local function set_cursor_to_cell(idx)
+local function get_extmark_for_cell(idx)
     local buffer = vim.api.nvim_get_current_buf()
     local extmarks = vim.api.nvim_buf_get_extmarks(
         buffer, settings.plugin_namespace, 0, -1, {}
@@ -14,9 +14,13 @@ local function set_cursor_to_cell(idx)
     local extmark = vim.api.nvim_buf_get_extmark_by_id(
         buffer, settings.plugin_namespace, extmark_id, { details = true }
     )
+    return extmark
+end
+
+local function set_cursor_to_cell(idx)
+    local extmark = get_extmark_for_cell(idx)
     local line = extmark[3].end_row
     vim.api.nvim_win_set_cursor(0, { line, 0 })
-
 end
 
 local function add_cell(cell, line)
