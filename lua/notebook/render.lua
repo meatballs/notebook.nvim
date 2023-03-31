@@ -72,9 +72,6 @@ M.notebook = function(buffer, content)
 
     local line = 0
     for _, cell in ipairs(content.cells) do
-        if #cell.metadata == 0 then
-            cell.metadata = {}
-        end
         cell.outputs = nil
         M.cell(buffer, line, cell, language)
         line = line + #cell.source
