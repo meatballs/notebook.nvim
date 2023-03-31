@@ -32,8 +32,12 @@ local function add_cell(cell, line)
     if not line then
         line = #vim.api.nvim_buf_get_lines(0, 0, -1, false)
     else
-        local extmark, _ = M.current_extmark(line)
-        line = extmark[3].end_row + 1
+        local extmark, idx = M.current_extmark(line)
+        local current_cell = settings.extmarks[buffer][idx]
+        line = extmark[3].end_row
+        if current_cell.cell_type == "markdown" then
+            line = line + 1
+        end
     end
 
     render.cell(buffer, line, cell, language)
