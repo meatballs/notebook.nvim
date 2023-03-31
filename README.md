@@ -19,9 +19,12 @@ require('notebook')
 ## Usage
 Open an existing `.ipynb` file or create a new one.
 
-You can add a new cell using `:NBAddCell`
-
 You can then edit the content of any cell and saving the buffer will correctly write your changes back to your notebook file.
+
+### Commands
+`NBAddCell` - Add a cell to the end of the notebook
+`NBInsertCell` - Insert a cell below the current cell
+`NBDeleteCell` - Delete the current cell
 
 ## Magma
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
