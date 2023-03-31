@@ -27,49 +27,38 @@ You can then edit the content of any cell and saving the buffer will correctly w
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
 
 ```lua
-function _G.define_cell()
-    -- Using the current line, define a magma cell from the ipynb cell
-    local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
-    local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
-    local current_line = vim.api.nvim__buf_stats(0).current_lnum
+require("notebook")
+local api = require("notebook.api")
 
-    for id, _ in pairs(extmarks) do
-        local extmark = vim.api.nvim_buf_get_extmark_by_id(
-            0, settings.plugin_namespace, id, { details = true }
-        )
-        local start_line = extmark[1] + 1
-        local end_line = extmark[3].end_row
-        if current_line >= start_line and current_line <= end_line then
-            vim.fn.MagmaDefineCell(start_line, end_line)
-            break
-        end
+function _G.define_cell(extmark)
+    if extmark == nil then
+        local line = vim.api.nvim__buf_stats(0).current_lnum
+        extmark, _ = api.current_extmark(line)
     end
+    local start_line = extmark[1] + 1
+    local end_line = extmark[3].end_row
+    vim.fn.MagmaDefineCell(start_line, end_line)
 end
 
 function _G.define_all_cells()
-    -- Set magma cells for each cell in the ipynb file
-    local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
-    local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
+    local extmarks = vim.b.notebook_extmarks
+    local settings = vim.b.notebook_settings
 
     for id, cell in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
             0, settings.plugin_namespace, id, { details = true }
         )
         if cell.cell_type == "code" then
-            local start_line = extmark[1] + 1
-            local end_line = extmark[3].end_row
-            vim.fn.MagmaDefineCell(start_line, end_line)
+            define_cell(extmark)
         end
     end
 
 end
 
--- Init magma when opening an ipynb file
 vim.api.nvim_create_autocmd(
     { "BufRead", },
     { pattern = { "*.ipynb" }, command = "MagmaInit" }
 )
--- Define all cells after magma init
 vim.api.nvim_create_autocmd(
      "User",
     {pattern = "MagmaInitPost", callback = _G.define_all_cells }

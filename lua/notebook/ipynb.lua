@@ -27,9 +27,9 @@ M.load = function(buffer)
 end
 
 M.dump = function(buffer)
-    local content = vim.api.nvim_buf_get_var(buffer, "notebook.content")
-    local settings = vim.api.nvim_buf_get_var(buffer, "notebook.settings")
-    local extmarks = vim.api.nvim_buf_get_var(buffer, "notebook.extmarks")
+    local settings = vim.b.notebook_settings
+    local content = vim.b.notebook_content
+    local extmarks = vim.b.notebook_extmarks
     local default_cell_metadata = { collapsed = false }
 
     local cells = {}

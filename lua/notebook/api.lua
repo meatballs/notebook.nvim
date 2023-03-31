@@ -7,8 +7,8 @@ local render = require("notebook.render")
 
 
 M.current_extmark = function(line)
-    local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
-    local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
+    local settings = vim.b.notebook_settings
+    local extmarks = vim.b.notebook_extmarks
     for id, _ in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
             0, settings.plugin_namespace, id, {details=true}
@@ -22,9 +22,9 @@ M.current_extmark = function(line)
 end
 
 local function add_cell(cell, line)
-    local settings = vim.api.nvim_buf_get_var(0, "notebook.settings")
-    local content = vim.api.nvim_buf_get_var(0, "notebook.content")
-    local extmarks = vim.api.nvim_buf_get_var(0, "notebook.extmarks")
+    local settings = vim.b.notebook_settings
+    local content = vim.b.notebook_content
+    local extmarks = vim.b.notebook_extmarks
     local language = content.metadata.kernelspec.language
 
     if not line then
@@ -37,7 +37,7 @@ local function add_cell(cell, line)
     local extmark = render.cell(0, line, cell, settings, language)
     extmarks[extmark] = cell
     vim.api.nvim_win_set_cursor(0, { line + 1, 0 })
-    vim.api.nvim_buf_set_var(0, "notebook.extmarks", extmarks)
+    vim.b.extmarks = extmarks
 end
 
 local set_cell_type = function(line)

@@ -77,9 +77,9 @@ M.notebook = function(buffer, content, settings)
         if cell.cell_type == "markdown" then line = line + 2 end
     end
 
-    vim.api.nvim_buf_set_var(buffer, "notebook.settings", settings)
-    vim.api.nvim_buf_set_var(buffer, "notebook.content", content)
-    vim.api.nvim_buf_set_var(buffer, "notebook.extmarks", extmarks)
+    vim.b.notebook_settings = settings
+    vim.b.notebook_content = content
+    vim.b.notebook_extmarks = extmarks
     vim.api.nvim_buf_set_option(buffer, "filetype", language)
 end
 
