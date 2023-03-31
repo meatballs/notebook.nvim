@@ -75,10 +75,7 @@ M.insert_cell = function(command)
 end
 
 M.delete_cell = function(command)
-    local idx = command.fargs[1]
-    if not idx then
-        _, idx = M.current_extmark()
-    end
+    local  _, idx = M.current_extmark()
     local buffer = vim.api.nvim_get_current_buf()
     local content = settings.content[buffer]
     table.remove(content.cells, idx)
