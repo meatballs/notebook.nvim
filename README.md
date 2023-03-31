@@ -32,6 +32,7 @@ If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can 
 ```lua
 require("notebook")
 local api = require("notebook.api")
+local settings = require("notebook.settings")
 
 function _G.define_cell(extmark)
     if extmark == nil then
@@ -44,8 +45,8 @@ function _G.define_cell(extmark)
 end
 
 function _G.define_all_cells()
-    local extmarks = vim.b.notebook.extmarks
-    local settings = vim.b.notebook.settings
+    local buffer = vim.api.nvim_get_current_buf()
+    local extmarks = settings.extmarks[buffer]
 
     for id, cell in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
@@ -55,7 +56,6 @@ function _G.define_all_cells()
             define_cell(extmark)
         end
     end
-
 end
 
 vim.api.nvim_create_autocmd(
@@ -64,7 +64,7 @@ vim.api.nvim_create_autocmd(
 )
 vim.api.nvim_create_autocmd(
      "User",
-    {pattern = "MagmaInitPost", callback = _G.define_all_cells }
+    {pattern = {"MagmaInitPost", "NBPostRender"}, callback = _G.define_all_cells }
 )
 ```
 
