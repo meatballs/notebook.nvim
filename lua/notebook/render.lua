@@ -10,10 +10,10 @@ local comment_markers = {
     julia = { start = '#=', finish = '=#' }
 }
 
-local function add_virtual_text(buffer, line, cell, language)
+local function add_virtual_text(buffer, idx, line, cell, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
-    local text = "[" .. cell_type .. "]"
+    local text = "[" .. idx .. "][" .. cell_type .. "]"
     local virt_opts = {
         virt_lines = { { { "" } }, { { text, settings.virtual_text_hl_group } } },
         virt_lines_above = true,
@@ -30,7 +30,7 @@ local function add_extmark(buffer, line, end_line)
     )
 end
 
-M.cell = function(buffer, line, cell, language)
+M.cell = function(buffer, idx, line, cell, language)
     local source = {}
     local source_start_line = line
     local source_end_line
@@ -56,7 +56,7 @@ M.cell = function(buffer, line, cell, language)
     end
 
     vim.api.nvim_buf_set_lines(buffer, line, line, false, source)
-    add_virtual_text(buffer, line, cell, language)
+    add_virtual_text(buffer, idx, line, cell, language)
     local extmark = add_extmark(buffer, source_start_line, source_end_line)
     settings.extmarks[buffer][extmark] = cell
 end
@@ -71,9 +71,9 @@ M.notebook = function(buffer, content)
     local language = content.metadata.kernelspec.language
 
     local line = 0
-    for _, cell in ipairs(content.cells) do
+    for idx, cell in ipairs(content.cells) do
         cell.outputs = nil
-        M.cell(buffer, line, cell, language)
+        M.cell(buffer, idx, line, cell, language)
         line = line + #cell.source
         if cell.cell_type == "markdown" then line = line + 2 end
     end
