@@ -4,12 +4,6 @@
 local M = {}
 local settings = require("notebook.settings")
 
-local comment_markers = {
-    python = { start = '"""', finish = '"""' },
-    r = { start = '"', finish = '"' },
-    julia = { start = '#=', finish = '=#' }
-}
-
 local function add_virtual_text(buffer, line, cell, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
@@ -43,7 +37,7 @@ M.cell = function(buffer, line, cell, language)
     end_line = source_end_line
 
     if cell.cell_type == "markdown" then
-        local markers = comment_markers[language]
+        local markers = settings.comment_markers[language]
         table.insert(source, 1, markers["start"] .. "---")
         table.insert(source, markers["finish"])
         source_start_line = source_start_line + 1

@@ -92,10 +92,23 @@ M.add_cell = function(command)
     end
 end
 
+local function exclude_markers(line, language)
+    local result = line
+    local buffer = vim.api.nvim_get_current_buf()
+    local content = vim.api.nvim_buf_get_lines(buffer, line - 1, line, false)[1]
+    if content == settings.comment_markers[language].start .. "---" then
+        result = line + 1
+    end
+    if content == settings.comment_markers[language].finish then result = line - 1 end
+    return result
+end
+
 M.insert_cell = function(command)
     if has_unsaved_changes("adding") then return end
     local cell_type = command.fargs[1]
     local line = vim.api.nvim__buf_stats(0).current_lnum
+    local language = vim.b.notebook.content.metadata.kernelspec.language
+    line = exclude_markers(line, language)
     if cell_type then
         local cell = { cell_type = cell_type, source = { "" } }
         add_cell(cell, line)
