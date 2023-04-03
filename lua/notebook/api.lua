@@ -98,7 +98,7 @@ M.insert_cell = function(command)
     local extmark, idx = M.current_extmark()
     if not extmark then
         vim.notify(
-            "Cannot determine current cell. Try moving your cursor.",
+            "Cannot determine current cell.",
             vim.log.levels.WARN
         )
         return
@@ -113,7 +113,7 @@ M.delete_cell = function(command)
     local extmark, idx = M.current_extmark()
     if not extmark then
         vim.notify(
-            "Cannot determine current cell. Try moving your cursor.",
+            "Cannot determine current cell.",
             vim.log.levels.WARN
         )
         return
