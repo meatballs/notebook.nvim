@@ -19,7 +19,10 @@ end
 
 local function set_cursor_to_cell(idx)
     local extmark = get_extmark_for_cell(idx)
-    local line = extmark[3].end_row
+    local end_of_cell = extmark[3].end_row
+    local last_line = vim.api.nvim_buf_line_count(0)
+    if end_of_cell == 0 then end_of_cell = last_line end
+    local line = math.min(end_of_cell, last_line)
     vim.api.nvim_win_set_cursor(0, { line, 0 })
 end
 
