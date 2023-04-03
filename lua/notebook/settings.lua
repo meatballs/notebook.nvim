@@ -12,6 +12,11 @@ M.empty_notebook = {
     nbformat = 4,
     nbformat_minor = 5,
 }
+M.comment_markers = {
+    python = { start = '"""', finish = '"""' },
+    r = { start = '"', finish = '"' },
+    julia = { start = '#=', finish = '=#' }
+}
 M.extmarks = {}
 
 return M

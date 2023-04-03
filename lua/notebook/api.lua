@@ -26,31 +26,6 @@ local function set_cursor_to_cell(idx)
     vim.api.nvim_win_set_cursor(0, { line, 0 })
 end
 
-local function add_cell(cell, line)
-    local buffer = vim.api.nvim_get_current_buf()
-    local content = vim.b.notebook.content
-    local idx
-    if not line then
-        table.insert(content.cells, cell)
-        idx = #content.cells
-    else
-        _, idx = M.current_extmark(line)
-        table.insert(content.cells, idx + 1, cell)
-    end
-    render.notebook(buffer, content)
-    set_cursor_to_cell(idx + 1)
-end
-
-local function set_cell_type(line)
-    vim.ui.select({ "code", "markdown", "raw" }, {
-        prompt = "Select cell type:",
-    }, function(choice)
-        local cell = { cell_type = choice, source = { "" } }
-        add_cell(cell, line)
-    end
-    )
-end
-
 local function has_unsaved_changes(operation)
     local result = vim.o.modified
     if result then
@@ -63,11 +38,23 @@ local function has_unsaved_changes(operation)
     return result
 end
 
-M.current_extmark = function(line)
+local function exclude_markers(line, language)
+    local result = line
     local buffer = vim.api.nvim_get_current_buf()
-    if not line then
-        line = vim.api.nvim__buf_stats(0).current_lnum
+    local content = vim.api.nvim_buf_get_lines(buffer, line - 1, line, false)[1]
+    if content == settings.comment_markers[language].start .. "---" then
+        result = line + 1
     end
+    if content == settings.comment_markers[language].finish then result = line - 1 end
+    return result
+end
+
+M.current_extmark = function()
+    local buffer = vim.api.nvim_get_current_buf()
+    local line = vim.api.nvim__buf_stats(0).current_lnum
+    local content = vim.b.notebook.content
+    local language = content.metadata.kernelspec.language
+    line = exclude_markers(line, language)
     local extmarks = settings.extmarks[buffer]
     for id, _ in pairs(extmarks) do
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
@@ -81,34 +68,56 @@ M.current_extmark = function(line)
     end
 end
 
+local function add_new_cell(idx, cell_type)
+    local buffer = vim.api.nvim_get_current_buf()
+    local content = vim.b.notebook.content
+    local cell = { cell_type = cell_type, source = { "" } }
+    table.insert(content.cells, idx + 1, cell)
+    render.notebook(buffer, content)
+    set_cursor_to_cell(idx + 1)
+end
+
+local function set_cell_type(idx)
+    vim.ui.select({ "code", "markdown", "raw" }, {
+        prompt = "Select cell type:",
+    }, function(choice)
+        add_new_cell(idx, choice)
+    end
+    )
+end
+
 M.add_cell = function(command)
     if has_unsaved_changes("adding") then return end
-    local cell_type = command.fargs[1]
-    if cell_type then
-        local cell = { cell_type = cell_type, source = { "" } }
-        add_cell(cell)
-    else
-        set_cell_type()
-    end
+    local content = vim.b.notebook.content
+    local idx = #content.cells
+    set_cell_type(idx)
 end
 
 M.insert_cell = function(command)
     if has_unsaved_changes("adding") then return end
-    local cell_type = command.fargs[1]
-    local line = vim.api.nvim__buf_stats(0).current_lnum
-    if cell_type then
-        local cell = { cell_type = cell_type, source = { "" } }
-        add_cell(cell, line)
-    else
-        set_cell_type(line)
+    local extmark, idx = M.current_extmark()
+    if not extmark then
+        vim.notify(
+            "Cannot determine current cell.",
+            vim.log.levels.WARN
+        )
+        return
     end
+    set_cell_type(idx)
 end
 
 M.delete_cell = function(command)
     if has_unsaved_changes("deleting") then return end
     local buffer = vim.api.nvim_get_current_buf()
-    local _, idx = M.current_extmark()
     local content = vim.b.notebook.content
+    local extmark, idx = M.current_extmark()
+    if not extmark then
+        vim.notify(
+            "Cannot determine current cell.",
+            vim.log.levels.WARN
+        )
+        return
+    end
     table.remove(content.cells, idx)
     render.notebook(buffer, content)
 end
