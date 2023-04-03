@@ -37,12 +37,15 @@ M.read_notebook = function(autocmd)
     vim.api.nvim_set_hl_ns(settings.virtual_text_namespace)
     vim.api.nvim_buf_clear_namespace(buffer, settings.plugin_namespace, 0, -1)
     vim.api.nvim_buf_clear_namespace(buffer, settings.virtual_text_namespace, 0, -1)
-    vim.api.nvim_buf_create_user_command(buffer, "NBAddCell", api.add_cell,
-        { nargs = "?" })
-    vim.api.nvim_buf_create_user_command(buffer, "NBInsertCell", api.insert_cell,
-        { nargs = "?" })
-    vim.api.nvim_buf_create_user_command(buffer, "NBDeleteCell", api.delete_cell,
-        { nargs = "?" })
+    vim.api.nvim_buf_create_user_command(
+        buffer, "NBAddCell", api.add_cell, { nargs = "?" }
+    )
+    vim.api.nvim_buf_create_user_command(
+        buffer, "NBInsertCell", api.insert_cell, { nargs = "?" }
+    )
+    vim.api.nvim_buf_create_user_command(
+        buffer, "NBDeleteCell", api.delete_cell, { nargs = "?" }
+    )
     if content.metadata.kernelspec and content.metadata.kernelspec.language then
         render.notebook(buffer, content)
     else
