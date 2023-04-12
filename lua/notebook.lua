@@ -39,6 +39,9 @@ M.read_notebook = function(autocmd)
         buffer, "NBDeleteCell", api.delete_cell, {}
     )
     vim.api.nvim_buf_create_user_command(
+        buffer, "NBMoveCell", api.move_cell, { nargs = 1 }
+    )
+    vim.api.nvim_buf_create_user_command(
         buffer, "NBMoveCellUp", api.move_cell_up, {}
     )
     vim.api.nvim_buf_create_user_command(

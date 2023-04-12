@@ -25,6 +25,7 @@ You can then edit the content of any cell and saving the buffer will correctly w
 `NBAddCell` - Add a cell to the end of the notebook
 `NBInsertCell` - Insert a cell below the current cell
 `NBDeleteCell` - Delete the current cell
+`NBMoveCell <index>` - Move the current cell to the given position
 `NBMoveCellDown` - Move the current cell down the notebook by one
 `NBMoveCellUp` - Move the current cell up the notebook by one
 
