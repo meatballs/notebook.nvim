@@ -25,6 +25,8 @@ You can then edit the content of any cell and saving the buffer will correctly w
 `NBAddCell` - Add a cell to the end of the notebook
 `NBInsertCell` - Insert a cell below the current cell
 `NBDeleteCell` - Delete the current cell
+`NBMoveCellDown` - Move the current cell down the notebook by one
+`NBMoveCellUp` - Move the current cell up the notebook by one
 
 ## Magma
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
@@ -67,4 +69,4 @@ vim.api.nvim_create_autocmd(
 )
 ```
 
-NOTE: For these to work, you must use the 'meatballs' fork of the magma plugin as linked above.
+NOTE: For these -to work, you must use the 'meatballs' fork of the magma plugin as linked above.
