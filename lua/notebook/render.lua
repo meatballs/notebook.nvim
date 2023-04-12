@@ -60,6 +60,13 @@ M.notebook = function(buffer, content)
     -- This seems to break if we use a vim buffer variable, so we'll use settings
     -- instead
     settings.extmarks[buffer] = {}
+    settings.plugin_namespace = vim.api.nvim_create_namespace("")
+    vim.api.nvim_set_hl(
+        settings.virtual_text_namespace,
+        settings.virtual_text_hl_group,
+        settings.virtual_text_style
+    )
+    vim.api.nvim_set_hl_ns(settings.virtual_text_namespace)
 
     vim.api.nvim_buf_clear_namespace(buffer, settings.virtual_text_namespace, 0, -1)
     vim.api.nvim_buf_set_lines(buffer, 0, -1, false, {})

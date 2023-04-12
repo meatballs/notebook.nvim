@@ -29,22 +29,20 @@ M.read_notebook = function(autocmd)
         content = settings.empty_notebook
     end
 
-    vim.api.nvim_set_hl(
-        settings.virtual_text_namespace,
-        settings.virtual_text_hl_group,
-        settings.virtual_text_style
-    )
-    vim.api.nvim_set_hl_ns(settings.virtual_text_namespace)
-    vim.api.nvim_buf_clear_namespace(buffer, settings.plugin_namespace, 0, -1)
-    vim.api.nvim_buf_clear_namespace(buffer, settings.virtual_text_namespace, 0, -1)
     vim.api.nvim_buf_create_user_command(
-        buffer, "NBAddCell", api.add_cell, { nargs = "?" }
+        buffer, "NBAddCell", api.add_cell, {}
     )
     vim.api.nvim_buf_create_user_command(
-        buffer, "NBInsertCell", api.insert_cell, { nargs = "?" }
+        buffer, "NBInsertCell", api.insert_cell, {}
     )
     vim.api.nvim_buf_create_user_command(
-        buffer, "NBDeleteCell", api.delete_cell, { nargs = "?" }
+        buffer, "NBDeleteCell", api.delete_cell, {}
+    )
+    vim.api.nvim_buf_create_user_command(
+        buffer, "NBMoveCellUp", api.move_cell_up, {}
+    )
+    vim.api.nvim_buf_create_user_command(
+        buffer, "NBMoveCellDown", api.move_cell_down, {}
     )
     if content.metadata.kernelspec and content.metadata.kernelspec.language then
         render.notebook(buffer, content)

@@ -122,4 +122,48 @@ M.delete_cell = function(command)
     render.notebook(buffer, content)
 end
 
+M.move_cell_up = function(command)
+    if has_unsaved_changes("moving") then return end
+    local buffer = vim.api.nvim_get_current_buf()
+    local content = vim.b.notebook.content
+    local extmark, idx = M.current_extmark()
+    if not extmark then
+        vim.notify(
+            "Cannot determine current cell.",
+            vim.log.levels.WARN
+        )
+        return
+    end
+    local to = idx - 1
+    if to < 1 then
+        vim.notify("Cell is already the first in the notebook.", vim.log.levels.WARN)
+        return
+    end
+    local cell = table.remove(content.cells, idx)
+    table.insert(content.cells, to, cell)
+    render.notebook(buffer, content)
+end
+
+M.move_cell_down = function(command)
+    if has_unsaved_changes("moving") then return end
+    local buffer = vim.api.nvim_get_current_buf()
+    local content = vim.b.notebook.content
+    local extmark, idx = M.current_extmark()
+    if not extmark then
+        vim.notify(
+            "Cannot determine current cell.",
+            vim.log.levels.WARN
+        )
+        return
+    end
+    local to = idx + 1
+    if to > #content.cells then
+        vim.notify("Cell is already the last in the notebook.", vim.log.levels.WARN)
+        return
+    end
+    local cell = table.remove(content.cells, idx)
+    table.insert(content.cells, to, cell)
+    render.notebook(buffer, content)
+end
+
 return M
