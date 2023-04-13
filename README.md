@@ -22,12 +22,17 @@ Open an existing `.ipynb` file or create a new one.
 You can then edit the content of any cell and saving the buffer will correctly write your changes back to your notebook file.
 
 ### Commands
-`NBAddCell` - Add a cell to the end of the notebook
-`NBInsertCell` - Insert a cell below the current cell
-`NBDeleteCell` - Delete the current cell
-`NBMoveCell <index>` - Move the current cell to the given position
-`NBMoveCellDown` - Move the current cell down the notebook by one
-`NBMoveCellUp` - Move the current cell up the notebook by one
+If you're in a buffer for an .ipynb file, the following commands will be available:
+
+* `NBAddCell` - Add a cell to the end of the notebook
+* `NBInsertCell` - Insert a cell below the current cell
+* `NBDeleteCell` - Delete the current cell
+* `NBMoveCell <index>` - Move the current cell to the given position
+* `NBMoveCellDown` - Move the current cell down the notebook by one
+* `NBMoveCellUp` - Move the current cell up the notebook by one
+
+NOTE: There must be no unsaved changes in your buffer before these commands will work
+and neovim's Undo functionality will not reverse the changes made by these commands.
 
 ## Magma
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
