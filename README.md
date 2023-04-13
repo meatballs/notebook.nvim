@@ -1,5 +1,5 @@
 # notebook.nvim
-A [neovim](https://neovim.io) plugin to open `.ipynb` notebook files.
+A [neovim](https://neovim.io) plugin for working with `.ipynb` notebook files.
 
 ## Installation
 Install with your favourite plugin manager. e.g.:
