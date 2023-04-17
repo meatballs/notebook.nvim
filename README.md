@@ -13,7 +13,15 @@ use {"meatballs/notebook.nvim"}
 Add the following to your `init.lua`:
 
 ```lua
-require('notebook')
+require('notebook').setup()
+```
+
+Or, to set any of the configuration options:
+
+```lua
+require('notebook').setup {
+    insert_blank_line = true -- whether to insert a blank line at the top of the notebook
+}
 ```
 
 ## Usage

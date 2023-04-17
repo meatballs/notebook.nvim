@@ -18,5 +18,8 @@ M.comment_markers = {
     julia = { start = '#=', finish = '=#' }
 }
 M.extmarks = {}
+M.options = {
+    insert_blank_line = true
+}
 
 return M

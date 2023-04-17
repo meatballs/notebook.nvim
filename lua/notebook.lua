@@ -20,6 +20,15 @@ local set_language = function(buffer, content)
     )
 end
 
+M.setup = function(options)
+    if options == nil then
+        return
+    end
+    for k,v in pairs(options) do
+        settings.options[k] = v
+    end
+end
+
 
 M.read_notebook = function(autocmd)
     local buffer = autocmd.buf

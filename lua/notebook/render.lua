@@ -73,6 +73,9 @@ M.notebook = function(buffer, content)
     local language = content.metadata.kernelspec.language
 
     local line = 0
+    if settings.options.insert_blank_line then
+        line = line + 1
+    end
     for idx, cell in ipairs(content.cells) do
         cell.outputs = nil
         M.cell(buffer, idx, line, cell, language)
