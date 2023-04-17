@@ -64,7 +64,7 @@ M.notebook = function(buffer, content)
     vim.api.nvim_set_hl(
         settings.virtual_text_namespace,
         settings.virtual_text_hl_group,
-        settings.virtual_text_style
+        settings.options.virtual_text_style
     )
     vim.api.nvim_set_hl_ns(settings.virtual_text_namespace)
 

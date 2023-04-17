@@ -3,7 +3,6 @@ local M = {}
 -- M.plugin_namespace = vim.api.nvim_create_namespace("notebook")
 M.virtual_text_namespace = vim.api.nvim_create_namespace("notebook.virtual")
 M.virtual_text_hl_group = "notebook_virtual_text"
-M.virtual_text_style = { fg = "lightblue", italic = true }
 M.empty_notebook = {
     cells = {},
     metadata = {
@@ -19,7 +18,8 @@ M.comment_markers = {
 }
 M.extmarks = {}
 M.options = {
-    insert_blank_line = true
+    insert_blank_line = true,
+    virtual_text_style = { fg = "lightblue", italic = true }
 }
 
 return M

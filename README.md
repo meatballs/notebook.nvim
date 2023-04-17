@@ -20,7 +20,8 @@ Or, to set any of the configuration options:
 
 ```lua
 require('notebook').setup {
-    insert_blank_line = true -- whether to insert a blank line at the top of the notebook
+    insert_blank_line = true, -- whether to insert a blank line at the top of the notebook
+    virtual_text_style = { fg = "lightblue", italic = true }, -- Style for the virtual text at the top of a cell
 }
 ```
 
