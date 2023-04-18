@@ -1,7 +1,5 @@
 local M = {}
 
--- M.plugin_namespace = vim.api.nvim_create_namespace("notebook")
-M.virtual_text_namespace = vim.api.nvim_create_namespace("notebook.virtual")
 M.virtual_text_hl_group = "notebook_virtual_text"
 M.empty_notebook = {
     cells = {},

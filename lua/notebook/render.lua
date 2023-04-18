@@ -68,6 +68,7 @@ M.notebook = function(buffer, content)
     settings.extmarks[buffer] = {}
 
     settings.plugin_namespace = vim.api.nvim_create_namespace("")
+    settings.virtual_text_namespace = vim.api.nvim_create_namespace("")
     vim.api.nvim_set_hl(
         settings.virtual_text_namespace,
         settings.virtual_text_hl_group,
