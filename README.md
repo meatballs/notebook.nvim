@@ -101,7 +101,7 @@ vim.api.nvim_create_autocmd(
 )
 vim.api.nvim_create_autocmd(
      "User",
-    {pattern = {"MagmaInitPost", "NBPostRender"}, callback = _G.define_all_cells }
+    { pattern = { "MagmaInitPost", "NBPostRender" }, callback = _G.define_all_cells }
 )
 ```
 
