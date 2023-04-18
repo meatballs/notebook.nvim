@@ -74,7 +74,7 @@ local settings = require("notebook.settings")
 
 function _G.define_cell(extmark)
     if extmark == nil then
-        local line = vim.api.nvim__buf_stats(0).current_lnum
+        local line = vim.fn.line(".")
         extmark, _ = api.current_extmark(line)
     end
     local start_line = extmark[1] + 1
