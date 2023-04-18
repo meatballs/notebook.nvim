@@ -19,6 +19,8 @@ M.comment_markers = {
 M.extmarks = {}
 M.options = {
     insert_blank_line = true,
+    show_cell_type = true,
+    show_index = true,
     virtual_text_style = { fg = "lightblue", italic = true }
 }
 

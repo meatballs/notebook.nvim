@@ -20,8 +20,15 @@ Or, to set any of the configuration options:
 
 ```lua
 require('notebook').setup {
-    -- whether to insert a blank line at the top of the notebook
+    -- Whether to insert a blank line at the top of the notebook
     insert_blank_line = true,
+
+    -- Whether to display the index number of a cell
+    show_index = true,
+
+    -- Whether to display the type of a cell
+    show_cell_type = true,
+
     -- Style for the virtual text at the top of a cell
     virtual_text_style = { fg = "lightblue", italic = true },
 }
@@ -42,8 +49,7 @@ If you're in a buffer for an .ipynb file, the following commands will be availab
 * `NBMoveCellDown` - Move the current cell down the notebook by one
 * `NBMoveCellUp` - Move the current cell up the notebook by one
 
-NOTE: There must be no unsaved changes in your buffer before these commands will work
-and neovim's Undo functionality will not reverse the changes made by these commands.
+> NOTE: There must be no unsaved changes in your buffer before these commands will work and neovim's Undo functionality will not reverse the changes made by these commands.
 
 ### Autocommands
 The plugin provides User autocommands for your customisation:
@@ -53,9 +59,13 @@ The plugin provides User autocommands for your customisation:
 * `NBPreRenderCell`: runs immediately before each cell is rendered
 * `NBPostRenderCell`: runs immediately after each cell is rendered.
 
-
 ## Magma
-If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
+If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config.
+
+This will:
+
+* Prompt for Magma initialisation when an `.ipynb` file is opened
+* (Re)define all cells as Magma cells each time the notebook is rendered
 
 ```lua
 require("notebook")
@@ -95,4 +105,4 @@ vim.api.nvim_create_autocmd(
 )
 ```
 
-NOTE: For these -to work, you must use the 'meatballs' fork of the magma plugin as linked above.
+> NOTE: For these to work, you must use the 'meatballs' fork of the magma plugin as linked above.

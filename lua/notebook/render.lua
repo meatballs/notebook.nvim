@@ -8,7 +8,9 @@ local settings = require("notebook.settings")
 local function add_virtual_text(buffer, idx, line, cell, language)
     local cell_type = cell.cell_type
     if cell_type == "code" then cell_type = language end
-    local text = "[" .. idx .. "][" .. cell_type .. "]"
+    local text = ""
+    if settings.options.show_index then text = "[" .. idx .. "]" end
+    if settings.options.show_cell_type then text = text .. "[" .. cell_type .. "]" end
     local virt_opts = {
         virt_lines = { { { "" } }, { { text, settings.virtual_text_hl_group } } },
         virt_lines_above = true,
