@@ -26,6 +26,7 @@ local function add_extmark(buffer, line, end_line)
 end
 
 M.cell = function(buffer, idx, line, cell, language)
+    vim.cmd({ cmd = "doautocmd", args = { "User", "NBPreRenderCell" } })
     local source = {}
     local source_start_line = line
     local source_end_line
@@ -54,12 +55,16 @@ M.cell = function(buffer, idx, line, cell, language)
     add_virtual_text(buffer, idx, line, cell, language)
     local extmark = add_extmark(buffer, source_start_line, source_end_line)
     settings.extmarks[buffer][extmark] = cell
+    vim.cmd({ cmd = "doautocmd", args = { "User", "NBPostRenderCell" } })
 end
 
 M.notebook = function(buffer, content)
+    vim.cmd({ cmd = "doautocmd", args = { "User", "NBPreRender" } })
+
     -- This seems to break if we use a vim buffer variable, so we'll use settings
     -- instead
     settings.extmarks[buffer] = {}
+
     settings.plugin_namespace = vim.api.nvim_create_namespace("")
     vim.api.nvim_set_hl(
         settings.virtual_text_namespace,
@@ -83,7 +88,6 @@ M.notebook = function(buffer, content)
         if cell.cell_type == "markdown" then line = line + 2 end
     end
 
-    -- Use a vim buffer variable so it gets cleared when the buffer is deleted
     vim.b.notebook = { content = content }
     vim.api.nvim_buf_set_option(buffer, "filetype", language)
     vim.cmd({ cmd = "doautocmd", args = { "User", "NBPostRender" } })

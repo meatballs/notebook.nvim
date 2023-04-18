@@ -20,8 +20,10 @@ Or, to set any of the configuration options:
 
 ```lua
 require('notebook').setup {
-    insert_blank_line = true, -- whether to insert a blank line at the top of the notebook
-    virtual_text_style = { fg = "lightblue", italic = true }, -- Style for the virtual text at the top of a cell
+    -- whether to insert a blank line at the top of the notebook
+    insert_blank_line = true,
+    -- Style for the virtual text at the top of a cell
+    virtual_text_style = { fg = "lightblue", italic = true },
 }
 ```
 
@@ -42,6 +44,15 @@ If you're in a buffer for an .ipynb file, the following commands will be availab
 
 NOTE: There must be no unsaved changes in your buffer before these commands will work
 and neovim's Undo functionality will not reverse the changes made by these commands.
+
+### Autocommands
+The plugin provides User autocommands for your customisation:
+
+* `NBPreRender`: runs immediately before a notebook is rendered
+* `NBPostRender`: runs immediately after a notebook is rendered
+* `NBPreRenderCell`: runs immediately before each cell is rendered
+* `NBPostRenderCell`: runs immediately after each cell is rendered.
+
 
 ## Magma
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config:
