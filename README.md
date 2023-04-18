@@ -54,10 +54,10 @@ If you're in a buffer for an .ipynb file, the following commands will be availab
 ### Autocommands
 The plugin provides User autocommands for your customisation:
 
-* `NBPreRender`: runs immediately before a notebook is rendered
-* `NBPostRender`: runs immediately after a notebook is rendered
-* `NBPreRenderCell`: runs immediately before each cell is rendered
-* `NBPostRenderCell`: runs immediately after each cell is rendered.
+* `NBPreRender` - runs immediately before a notebook is rendered
+* `NBPostRender`- runs immediately after a notebook is rendered
+* `NBPreRenderCell` - runs immediately before each cell is rendered
+* `NBPostRenderCell` - runs immediately after each cell is rendered.
 
 ## Magma
 If you use the [magma](https://github.com/meatballs/magma-nvim) plugin, you can add the following to your neovim config.
