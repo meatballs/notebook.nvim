@@ -25,6 +25,7 @@ M.dump = function(buffer)
         if cell.metadata == nil or #cell.metadata == 0 then
             cell.metadata = default_cell_metadata
         end
+        cell.outputs = {}
         local extmark = vim.api.nvim_buf_get_extmark_by_id(
             buffer, settings.plugin_namespace, id, { details = true }
         )
